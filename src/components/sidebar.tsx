@@ -1,4 +1,3 @@
-import { Home, Inbox, PaperclipIcon, ReceiptIcon, MessageCircleIcon } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -12,36 +11,13 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar"
 
-// Menu items.
-const tenantItems = [
-  {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "My Requests",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "My Contracts",
-    url: "#",
-    icon: PaperclipIcon
-  },
-  {
-    title: "Billing Statements",
-    url: "#",
-    icon: ReceiptIcon
-  },
-  {
-    title: "FAQ",
-    url: "#",
-    icon: MessageCircleIcon
-  },
-]
+interface MenuItem {
+  title: string
+  url: string
+  icon: React.ElementType
+}
 
-export function AppSidebar() {
+export function AppSidebar({ menuItems }: { menuItems: MenuItem[] }) {
   return (
     <Sidebar>
       <SidebarHeader />
@@ -50,7 +26,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {tenantItems.map((item) => (
+              {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild size={"lg"}>
                     <a href={item.url} className="flex items-center space-x-2">
