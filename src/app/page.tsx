@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { subscribeUser, unsubscribeUser, sendNotification } from './actions'
-import FormComponent from '@/components/login-form'
-import { MultiCard } from '@/components/multi-card'
+import LoginForm from '@/components/login-form'
 
 function urlBase64ToUint8Array(base64String: string) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
@@ -143,7 +142,7 @@ export default function Page() {
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <h1 className="text-3xl font-bold mb-6">Client Portal</h1>
       <div className="w-full max-w-md">
-        <FormComponent />
+        <LoginForm />
         <div className="mt-4 text-left text-xs">
           <a href="/forgot-password" className="underline">
             Forgot Password?

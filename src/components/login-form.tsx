@@ -14,7 +14,7 @@ const formSchema = z.object({
   password: z.string().min(8, { message: "Password must be at least 8 characters." }),
 });
 
-export default function FormComponent() {
+export default function LoginForm() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {

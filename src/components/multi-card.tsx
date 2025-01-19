@@ -11,32 +11,46 @@ import {
 
 type CardData = {
   id: string | number
-  title: string
+  title?: string
   description?: string
-  content: React.ReactNode
+  content?: React.ReactNode
   footer?: React.ReactNode
 }
+const paddingSizes = {
+  xs: "p-2",
+  sm: "p-4",
+  md: "p-6",
+  lg: "p-8",
+  xl: "p-10",
+};
 
 type MultiCardProps = {
   data: CardData[]
   direction: "row" | "column"
+  padding?: keyof typeof paddingSizes
 }
 
-export function MultiCard({ data, direction }: MultiCardProps) {
+
+
+export function MultiCard({ data, direction, padding = "md" }: MultiCardProps) {
   return (
     <div className={`grid gap-4 ${direction === "row" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-rows-1"}`}>
       {data.map((item) => (
-        <Card key={item.id} className="w-[350px]">
-          <CardHeader>
-            <CardTitle>{item.title}</CardTitle>
-            <CardDescription>{item.description}</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <Card key={item.id}>
+          {item.title || item.description ? (
+            <CardHeader>
+              <CardTitle>{item.title}</CardTitle>
+              <CardDescription>{item.description}</CardDescription>
+            </CardHeader>
+          ) : null}
+          <CardContent className={paddingSizes[padding]}>
             {item.content}
           </CardContent>
+          { item.footer &&
           <CardFooter className="flex justify-between">
             {item.footer}
           </CardFooter>
+          }
         </Card>
       ))}
     </div>

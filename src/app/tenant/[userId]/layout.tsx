@@ -12,9 +12,9 @@ export default function HomeLayout({
     <div>
     <SidebarProvider>
     <AppSidebar />
-      <main>
+      <main className="mx-10 w-full">
         <SidebarTrigger />
-        <div className="mx-10">
+        <div>
         {children}
         </div>
       </main>

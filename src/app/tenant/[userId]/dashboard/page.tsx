@@ -64,12 +64,34 @@ const cardData = [
         </div>
       ),
     },
-  ]
+  ];
+
+  const accountCardData = [
+    {
+      id: 1,
+      title: 'Card 1',
+      description: "Description 1",
+   
+    },
+    {
+      id: 2,
+      title: 'Card 2',
+      description: "Description 2",
+   
+    },
+    {
+      id: 3,
+      title: 'Card 3',
+      description: "Description 3",
+    },
+  ];
 export default function Dashboard() {
   return (
     <div className="space-y-4">
     <h1 className="text-3xl font-bold opacity-80">Recent Request</h1>
     <MultiCard data={cardData} direction="row" />
+    <h1 className="text-3xl font-bold opacity-80">Account Management</h1>
+    <MultiCard data={accountCardData} direction="row" />
   </div>
   )
 }
