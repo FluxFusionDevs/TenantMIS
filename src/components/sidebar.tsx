@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
@@ -9,15 +11,25 @@ import {
   SidebarMenuItem,
   SidebarHeader,
   SidebarFooter,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { useRouter } from "next/navigation";
 
 interface MenuItem {
-  title: string
-  url: string
-  icon: React.ElementType
+  title: string;
+  url: string;
+  icon: React.ElementType;
 }
 
-export function AppSidebar({ menuItems }: { menuItems: MenuItem[] }) {
+export function AppSidebar({
+  menuItems,
+}: {
+  menuItems: MenuItem[];
+  otherItems?: MenuItem[];
+}) {
+  const router = useRouter();
+  const handleClick = (itemUrl: string) => {
+    router.push(itemUrl);
+  };
   return (
     <Sidebar>
       <SidebarHeader />
@@ -29,10 +41,13 @@ export function AppSidebar({ menuItems }: { menuItems: MenuItem[] }) {
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild size={"lg"}>
-                    <a href={item.url} className="flex items-center space-x-2">
-                      <item.icon></item.icon>
+                    <button
+                      onClick={() => handleClick(item.url)}
+                      className="flex items-center space-x-2"
+                    >
+                      <item.icon />
                       <span className="text-lg">{item.title}</span>
-                    </a>
+                    </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -41,12 +56,10 @@ export function AppSidebar({ menuItems }: { menuItems: MenuItem[] }) {
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Other</SidebarGroupLabel>
-          <SidebarGroupContent>
-            {/* Add other sidebar groups or items here if needed */}
-          </SidebarGroupContent>
+          <SidebarGroupContent></SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter />
     </Sidebar>
-  )
+  );
 }
