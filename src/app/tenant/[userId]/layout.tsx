@@ -8,13 +8,18 @@ interface MenuItem {
   icon: React.ComponentType;
 }
 
-export default function HomeLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { userId: string };
-}) {
+export default async function HomeLayout(
+  props: {
+    children: React.ReactNode;
+    params: Promise<{ userId: string }>;
+  }
+) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   const tenantItems: MenuItem[] = [
     {
       title: "Home",
