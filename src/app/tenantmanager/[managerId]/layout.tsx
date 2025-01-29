@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Home, Users, ClipboardList, Settings, FileText } from "lucide-react";
+import { Home, Users, ClipboardList, Settings, FileText, ShoppingCart } from "lucide-react";
 
 interface MenuItem {
   title: string;
@@ -41,7 +41,7 @@ export default async function ManagerLayout({
     {
       title: "Purchase",
       url: `/tenantmanager/${managerId}/purchase`,
-      icon: Settings,
+      icon: ShoppingCart,
     },
   ];
 
