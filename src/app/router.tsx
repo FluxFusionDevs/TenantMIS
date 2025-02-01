@@ -12,11 +12,9 @@ const Router: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useEffect(() => {
     if (!loading) {
       if (!session) {
-        router.push('/');
-      } else {
-        console.log(session);
-        const { user } = session;
-        router.push(`/tenant/${user.id}/dashboard`);
+        router.push('/auth/login');
+      } else if (window.location.pathname.startsWith('/auth') || window.location.pathname === '/') {
+        window.location.href = '/tenant/dashboard';
       }
     }
   }, [session, loading, router]);

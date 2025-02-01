@@ -38,7 +38,7 @@ export default function LoginForm() {
     }
 
     setError(null);
-    console.log("User signed in:", data.user);
+    
   }
 
   // async function onSubmit(values: z.infer<typeof formSchema>) {

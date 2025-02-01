@@ -2,14 +2,11 @@
 
 import { AppSidebar } from "@/components/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { supabase } from "@/lib/supabaseClient";
 import { Home, Inbox, Paperclip, Receipt, MessageCircle, LogOut } from "lucide-react";
+import { constants } from "node:buffer";
 import React, { Usable } from "react";
-
-interface MenuItem {
-  title: string;
-  url: string;
-  icon: React.ComponentType;
-}
+import { MenuItem } from "@/models/sidebar-menu";
 
 type Params = {
   userId: string;
@@ -21,26 +18,29 @@ export default function HomeLayout({
   children: React.ReactNode;
   params: Usable<Params>;
 }) {
-  const { userId } = React.use<Params>(params);
+  const signOut = async () => {
+    await supabase.auth.signOut();
+  };
+
   const tenantItems: MenuItem[] = [
     {
       title: "Home",
-      url: `/tenant/${userId}/dashboard`,
+      url: `/tenant/dashboard`,
       icon: Home,
     },
     {
       title: "My Requests",
-      url: `/tenant/${userId}/request`,
+      url: `/tenant/request/`,
       icon: Inbox,
     },
     {
       title: "My Contracts",
-      url: `/tenant/${userId}/contracts`,
+      url: `/tenant/contracts`,
       icon: Paperclip,
     },
     {
       title: "Billing Statements",
-      url: `/tenant/${userId}/billing`,
+      url: `/tenant/billing`,
       icon: Receipt,
     },
     {
@@ -50,7 +50,7 @@ export default function HomeLayout({
     },
     {
       title: "Logout",
-      url: "/logout",
+      action: signOut,
       icon: LogOut
     }
   ];

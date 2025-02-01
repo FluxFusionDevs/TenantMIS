@@ -1,71 +1,73 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { subscribeUser, unsubscribeUser, sendNotification } from './actions'
-import LoginForm from '@/components/login-form'
+import { useState, useEffect } from "react";
+import { subscribeUser, unsubscribeUser, sendNotification } from "./actions";
+import LoginForm from "@/components/login-form";
 
 function urlBase64ToUint8Array(base64String: string) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
 
-  const rawData = window.atob(base64)
-  const outputArray = new Uint8Array(rawData.length)
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
 
   for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i)
+    outputArray[i] = rawData.charCodeAt(i);
   }
-  return outputArray
+  return outputArray;
 }
 
 function PushNotificationManager() {
-  const [isSupported, setIsSupported] = useState(false)
-  const [subscription, setSubscription] = useState<PushSubscription | null>(null)
-  const [message, setMessage] = useState('')
+  const [isSupported, setIsSupported] = useState(false);
+  const [subscription, setSubscription] = useState<PushSubscription | null>(
+    null
+  );
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
-      setIsSupported(true)
-      registerServiceWorker()
+    if ("serviceWorker" in navigator && "PushManager" in window) {
+      setIsSupported(true);
+      registerServiceWorker();
     }
-  }, [])
+  }, []);
 
   async function registerServiceWorker() {
-    const registration = await navigator.serviceWorker.register('/sw.js', {
-      scope: '/',
-      updateViaCache: 'none',
-    })
-    const sub = await registration.pushManager.getSubscription()
-    setSubscription(sub)
+    const registration = await navigator.serviceWorker.register("/sw.js", {
+      scope: "/",
+      updateViaCache: "none",
+    });
+    const sub = await registration.pushManager.getSubscription();
+    setSubscription(sub);
   }
 
   async function subscribeToPush() {
-    const registration = await navigator.serviceWorker.ready
+    const registration = await navigator.serviceWorker.ready;
     const sub = await registration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(
         process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!
       ),
-    })
-    setSubscription(sub)
-    const serializedSub = JSON.parse(JSON.stringify(sub))
-    await subscribeUser(serializedSub)
+    });
+    setSubscription(sub);
+    const serializedSub = JSON.parse(JSON.stringify(sub));
+    await subscribeUser(serializedSub);
   }
 
   async function unsubscribeFromPush() {
-    await subscription?.unsubscribe()
-    setSubscription(null)
-    await unsubscribeUser()
+    await subscription?.unsubscribe();
+    setSubscription(null);
+    await unsubscribeUser();
   }
 
   async function sendTestNotification() {
     if (subscription) {
-      await sendNotification(message)
-      setMessage('')
+      await sendNotification(message);
+      setMessage("");
     }
   }
 
   if (!isSupported) {
-    return <p>Push notifications are not supported in this browser.</p>
+    return <p>Push notifications are not supported in this browser.</p>;
   }
 
   return (
@@ -90,40 +92,43 @@ function PushNotificationManager() {
         </>
       )}
     </div>
-  )
+  );
 }
 
 function InstallPrompt() {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
-  const [isStandalone, setIsStandalone] = useState(false)
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: any) => {
-      e.preventDefault()
-      setDeferredPrompt(e)
-    }
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
-    setIsStandalone(window.matchMedia('(display-mode: standalone)').matches)
+    setIsStandalone(window.matchMedia("(display-mode: standalone)").matches);
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-    }
-  }, [])
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt
+      );
+    };
+  }, []);
 
   const handleInstallClick = async () => {
     if (deferredPrompt) {
-      deferredPrompt.prompt()
-      const { outcome } = await deferredPrompt.userChoice
-      if (outcome === 'accepted') {
-        setDeferredPrompt(null)
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === "accepted") {
+        setDeferredPrompt(null);
       }
     }
-  }
+  };
 
   if (isStandalone) {
-    return null // Don't show install button if already installed
+    return null; // Don't show install button if already installed
   }
 
   return (
@@ -131,26 +136,11 @@ function InstallPrompt() {
       <h3>Install App</h3>
       <button onClick={handleInstallClick}>Add to Home Screen</button>
     </div>
-  )
+  );
 }
 
-
-
-
 export default function Page() {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <h1 className="text-3xl font-bold mb-6">Client Portal</h1>
-      <div className="w-full max-w-md">
-        <LoginForm />
-        <div className="mt-4 text-left text-xs">
-          <a href="/forgot-password" className="underline">
-            Forgot Password?
-          </a>
-        </div>
-      </div>
-    </div>
-  )
+  return <div></div>;
 }
 
 // import Image from "next/image";
@@ -186,7 +176,7 @@ export default function Page() {
 //                     </li>
 //                     <li>Save and see your changes instantly.</li>
 //                   </ol>
-          
+
 //                   <div className="flex gap-4 items-center flex-col sm:flex-row">
 //                     <a
 //                       className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"

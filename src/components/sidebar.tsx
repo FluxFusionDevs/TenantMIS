@@ -12,13 +12,8 @@ import {
   SidebarHeader,
   SidebarFooter,
 } from "@/components/ui/sidebar";
+import { MenuItem } from "@/models/sidebar-menu";
 import { useRouter } from "next/navigation";
-
-interface MenuItem {
-  title: string;
-  url: string;
-  icon: React.ElementType;
-}
 
 export function AppSidebar({
   menuItems,
@@ -42,7 +37,7 @@ export function AppSidebar({
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild size={"lg"}>
                     <button
-                      onClick={() => handleClick(item.url)}
+                      onClick={() => item.url ? handleClick(item.url): item.action && item.action() }
                       className="flex items-center space-x-2"
                     >
                       <item.icon />
