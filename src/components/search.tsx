@@ -14,18 +14,14 @@ import { Complaint } from "@/models/complaint";
 
 interface SearchProps {
   placeholder?: string;
+  onSelect?: (suggestion: Complaint) => void;
 }
 
-export function Search({ placeholder = "Search..." }: SearchProps) {
+export function Search({ placeholder = "Search...", onSelect }: SearchProps) {
   const [suggestions, setSuggestions] = React.useState<Complaint[]>([]);
   const [searchQuery, setSearchQuery] = React.useState<string>("");
   const userIdRef = React.useRef<string | null>(null);
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-
-  const handleSelect = (suggestion: number) => {
-    console.log(suggestion);
-    // onSelect?.(suggestion);
-  };
 
   React.useEffect(() => {
     const fetchUser = async () => {
@@ -58,7 +54,6 @@ export function Search({ placeholder = "Search..." }: SearchProps) {
         );
         const { complaints } = await data.json();
         setSuggestions(complaints || []);
-        console.log("Suggestions", suggestions);
       } catch (error) {
         console.error("Error fetching suggestions:", error);
         setSuggestions([]);
@@ -76,7 +71,7 @@ export function Search({ placeholder = "Search..." }: SearchProps) {
         />
         <CommandList>
           <div className="max-h-[300px] overflow-y-auto">
-            {suggestions.length === 0 || searchQuery === "" ? (
+            {searchQuery === "" ? null : suggestions.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
                 No results found.
               </p>
@@ -85,10 +80,10 @@ export function Search({ placeholder = "Search..." }: SearchProps) {
                 {suggestions.map((suggestion) => (
                   <div
                     key={suggestion.complaint_id}
-                    onClick={() => handleSelect(suggestion.complaint_id)}
+                    onClick={() => onSelect && onSelect(suggestion)}
                     className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                   >
-                    {suggestion.description}
+                    {suggestion.subject}
                   </div>
                 ))}
               </div>
