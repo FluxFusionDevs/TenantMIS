@@ -13,7 +13,7 @@ const user = {
 
 const cardData = [
   {
-    id: 1,
+    id: "1",
     title: 'John Smith 3-Month Lease',
     description: "ID#2190",
     content: (
@@ -24,7 +24,7 @@ const cardData = [
     ),
   },
   {
-    id: 2,
+    id: "2",
     title: 'Jane Madison Neo',
     description: "ID#1154",
     content: (
@@ -35,7 +35,7 @@ const cardData = [
     ),
   },
   {
-    id: 3,
+    id: "3",
     title: 'James Manginiban',
     description: "ID#1678",
     content: (

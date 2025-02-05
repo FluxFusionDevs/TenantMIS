@@ -13,7 +13,7 @@ const user = {
 
 const cardData = [
   {
-    id: 1,
+    id: "1",
     title: 'Leaky Faucet',
     description: 'ID#0001',
     content: (
@@ -28,7 +28,7 @@ const cardData = [
     ),
   },
   {
-    id: 2,
+    id: "2",
     title: 'Malfunctioning Socket',
     description: 'ID#0029',
     content: (
@@ -43,7 +43,7 @@ const cardData = [
     ),
   },
   {
-    id: 3,
+    id: "3",
     title: 'Stuck Elevator',
     description: 'ID#0067',
     content: (

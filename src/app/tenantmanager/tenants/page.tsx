@@ -13,7 +13,7 @@ const user = {
 
 const tenants = [
   {
-    id: 1,
+    id: "1",
     title: 'John Smith',
     description: 'UID#2190',
     content: (
@@ -27,7 +27,7 @@ const tenants = [
     ),
   },
   {
-    id: 2,
+    id: "2",
     title: 'Jane Madison Neo',
     description: 'UID#1154',
     content: (
@@ -41,7 +41,7 @@ const tenants = [
     ),
   },
   {
-    id: 3,
+    id: "3",
     title: 'James Manginiban',
     description: 'UID#1678',
     content: (
@@ -58,7 +58,7 @@ const tenants = [
 
 // Add Tenant Card
 const addTenantCard = {
-  id: 4,
+  id: "4",
   title: '',
   description: '',
   content: (

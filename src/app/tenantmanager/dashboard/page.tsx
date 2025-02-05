@@ -12,7 +12,7 @@ const user = {
 
 const recentsData = [
   {
-    id: 1,
+    id: "1",
     title: 'Complaint',
     description: "Submitted by: John Smith",
     content: (
@@ -22,7 +22,7 @@ const recentsData = [
     ),
   },
   {
-    id: 2,
+    id: "2",
     title: 'Contract',
     description: "Contract: Jane Madison Neo",
     content: (
@@ -32,7 +32,7 @@ const recentsData = [
     ),
   },
   {
-    id: 3,
+    id: "3",
     title: 'Payment Due',
     description: "James Manginiban",
     content: (
@@ -44,13 +44,13 @@ const recentsData = [
 ];
 
 const managementData = [
-  { id: 1, title: 'Tenants', description: "Currently 58 Tenant/s", content: "" },
-  { id: 2, title: 'Contracts', description: "3 Pending", content: "" },
-  { id: 3, title: 'Complaints', description: "4 Active", content: "" },
+  { id: "1", title: 'Tenants', description: "Currently 58 Tenant/s", content: "" },
+  { id: "2", title: 'Contracts', description: "3 Pending", content: "" },
+  { id: "3", title: 'Complaints', description: "4 Active", content: "" },
 ];
 
 const ordersData = [
-  { id: 1, title: 'Purchase Orders', description: "Last Updated: 09/16/24", content: "" },
+  { id: "1", title: 'Purchase Orders', description: "Last Updated: 09/16/24", content: "" },
 ];
 
 const UserProfile = () => {
