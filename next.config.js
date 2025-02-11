@@ -38,6 +38,16 @@ module.exports = {
       ]
     },
     images: {
-      domains: ['encrypted-tbn0.gstatic.com'],
-    }
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: '**',
+        },
+      ],
+    },
+    experimental: {
+      serverActions: {
+        bodySizeLimit: '10mb',
+      },
+    },
   }

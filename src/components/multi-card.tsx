@@ -39,7 +39,7 @@ export function MultiCard({ data, direction, padding = "md" }: MultiCardProps) {
         <Card key={item.id}>
           {item.title || item.description ? (
             <CardHeader>
-              <CardTitle>{item.title}</CardTitle>
+              <CardTitle className="truncate">{item.title}</CardTitle>
               <CardDescription>{item.description}</CardDescription>
             </CardHeader>
           ) : null}

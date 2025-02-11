@@ -10,6 +10,10 @@ import {
   Receipt,
   MessageCircle,
   LogOut,
+  House,
+  TimerIcon,
+  Shield,
+  Wrench,
 } from "lucide-react";
 import { constants } from "node:buffer";
 import React, { Usable } from "react";
@@ -32,29 +36,25 @@ export default function HomeLayout({
   const tenantItems: MenuItem[] = [
     {
       title: "Home",
-      url: `/tenant/dashboard`,
+      url: `/staffmanager/dashboard`,
       icon: Home,
     },
     {
-      title: "My Requests",
-      url: `/tenant/request/`,
-      icon: Inbox,
+      title: "Housekeeping",
+      url: `/staffmanager/housekeeping`,
+      icon: House,
     },
     {
-      title: "My Contracts",
-      url: `/tenant/contracts`,
-      icon: Paperclip,
+      title: "Security Team",
+      url: `/staffmanager/security`,
+      icon: Shield,
     },
     {
-      title: "Billing Statements",
-      url: `/tenant/billing`,
-      icon: Receipt,
+      title: "Technicians",
+      url: `/staffmanager/technicians`,
+      icon: Wrench,
     },
-    {
-      title: "FAQ",
-      url: "#",
-      icon: MessageCircle,
-    },
+  
     {
       title: "Logout",
       action: signOut,
@@ -62,10 +62,18 @@ export default function HomeLayout({
     },
   ];
 
+  const otherItems: MenuItem[] = [
+    {
+      title: "Complaints",
+      url: `/staffmanager/complaints`,
+      icon: Inbox,
+    }
+  ];
+
   return (
     <div>
       <SidebarProvider>
-        <AppSidebar menuItems={tenantItems} />
+        <AppSidebar menuItems={tenantItems} otherItems={otherItems} />
         <main className="mx-2 md:mx-2 lg:mx-6 xl:mx-10 w-full">
           <SidebarTrigger />
           <div>{children}</div>

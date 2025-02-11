@@ -21,8 +21,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Status, Priority, Category, Complaint } from "@/models/complaint";
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
+import { MultipleFileUploads } from "@/components/multi-fileuploads";
+import { Loader2 } from "lucide-react";
 
 type FormState = {
   success: boolean;
@@ -35,78 +37,84 @@ const initialState: FormState = {
 };
 
 function formatValidationErrors(errors: string): string[] {
-    try {
-      const parsedErrors = JSON.parse(errors);
-      if (Array.isArray(parsedErrors)) {
-        return parsedErrors.map((error: any) => `• ${error.message}`);
-      }
-      // If single error
-      const singleError = typeof parsedErrors === "string" 
-        ? parsedErrors 
-        : parsedErrors.message;
-      return [`${singleError}`];
-    } catch (e) {
-      // If parsing fails, return original string with bullet
-      return [`${errors}`];
-    }
-  }
-
-async function submitRequest(
-  prevState: FormState,
-  formData: FormData
-): Promise<FormState> {
   try {
-    const response = await onSubmitRequest(formData);
-
-    if (response.success) {
-      return {
-        success: true,
-        messages: ["Request added successfully"],
-      };
-    } else {
-      const formattedErrors = formatValidationErrors(response.error.message);
-      return {
-        success: false,
-        messages: formattedErrors,
-      };
+    const parsedErrors = JSON.parse(errors);
+    if (Array.isArray(parsedErrors)) {
+      return parsedErrors.map((error: any) => `• ${error.message}`);
     }
-  } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : typeof error === "string"
-        ? error
-        : "An unexpected error occurred";
-
-    return {
-      success: false,
-      messages: [errorMessage],
-    };
+    // If single error
+    const singleError =
+      typeof parsedErrors === "string" ? parsedErrors : parsedErrors.message;
+    return [`${singleError}`];
+  } catch (e) {
+    // If parsing fails, return original string with bullet
+    return [`${errors}`];
   }
 }
 
 export function RequestForm({ tenantId }: { tenantId: string }) {
-  const [state, formAction] = useActionState(submitRequest, initialState);
+  const [state, formAction, pending] = useActionState(
+    submitRequest,
+    initialState
+  );
+  const filesFormData = new FormData();
+
+  async function submitRequest(
+    prevState: FormState,
+    formData: FormData
+  ): Promise<FormState> {
+    try {
+      const files = filesFormData.getAll("files");
+      files.forEach((file) => {
+        if (file instanceof Blob) {
+          formData.append("files", file);
+        }
+      });
+
+      const response = await onSubmitRequest(formData);
+
+      if (response.success) {
+        return {
+          success: true,
+          messages: ["Request added successfully"],
+        };
+      } else {
+        const formattedErrors = formatValidationErrors(response.error.message);
+        return {
+          success: false,
+          messages: formattedErrors,
+        };
+      }
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unexpected error occurred";
+
+      return {
+        success: false,
+        messages: [errorMessage],
+      };
+    } finally {
+      console.log("Request submitted");
+    }
+  }
 
   return (
     <DialogContent className="sm:max-w-[425px]">
+      <DialogTitle>Add a new request</DialogTitle>
+
       <DialogHeader>
-        <DialogTitle>Add a new request</DialogTitle>
         <DialogDescription>
           Fill in the form below to add a new request
         </DialogDescription>
       </DialogHeader>
       <form action={formAction} className="grid gap-4 py-4">
         <input type="hidden" name="tenant_id" value={tenantId} />
-         <div className="grid grid-cols-4 items-center gap-4">
+        <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="subject" className="text-right">
             Subject
           </Label>
           <div className="col-span-3">
-            <Input 
-              id="subject" 
-              name="subject" 
-            />
+            <Input id="subject" name="subject" />
           </div>
         </div>
         <div className="grid grid-cols-4 items-center gap-4">
@@ -180,7 +188,11 @@ export function RequestForm({ tenantId }: { tenantId: string }) {
           </Select>
           {state.messages && (
             <div className="col-span-4">
-              <ul className="text-red-500">
+              <ul
+                className={`${
+                  state.success ? "text-green-500" : "text-red-500"
+                }`}
+              >
                 {state.messages.map((message) => (
                   <li key={message}>{message}</li>
                 ))}
@@ -188,8 +200,12 @@ export function RequestForm({ tenantId }: { tenantId: string }) {
             </div>
           )}
         </div>
+        <MultipleFileUploads formData={filesFormData} />
         <DialogFooter>
-          <Button type="submit">Add Request</Button>
+          <Button type="submit" disabled={pending}>
+            {pending && <Loader2 className="h-4 w-4 animate-spin" />}
+            Add Request
+          </Button>
         </DialogFooter>
       </form>
     </DialogContent>

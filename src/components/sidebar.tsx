@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 
 export function AppSidebar({
   menuItems,
+  otherItems,
 }: {
   menuItems: MenuItem[];
   otherItems?: MenuItem[];
@@ -51,7 +52,23 @@ export function AppSidebar({
         </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Other</SidebarGroupLabel>
-          <SidebarGroupContent></SidebarGroupContent>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {otherItems?.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild size={"lg"}>
+                    <button
+                      onClick={() => item.url ? handleClick(item.url): item.action && item.action() }
+                      className="flex items-center space-x-2"
+                    >
+                      <item.icon />
+                      <span className="text-lg">{item.title}</span>
+                    </button>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter />

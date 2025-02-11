@@ -1,84 +1,61 @@
-import { MultiCard } from "@/components/multi-card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { FilterIcon, PlusCircleIcon, Search } from "lucide-react";
-import Image from "next/image";
+"use client";
 
-const ContractCards = [
-  {
-    id: 1,
-    content: (
-      <div className="flex items-start justify-start">
-        <Image
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwme89cM8YZvHcybGrZl_Obd9U9p5QabozJQ&s"
-          alt="Contract Image"
-          width={180}
-          height={180}
-        />
-        <div className="mx-8">
-          <p className="font-bold text-2xl opacity-80">Contract 1</p>
-          <p className="opacity-50 mb-2">Status</p>
-          <Button className="bg-[#00000080] text-white" size="lg">
-            View
-          </Button>
-        </div>
-      </div>
-    ),
-  },
-    {
-        id: 2,
-        content: (
-        <div className="flex items-start justify-start">
-            <Image
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwme89cM8YZvHcybGrZl_Obd9U9p5QabozJQ&s"
-            alt="Contract Image"
-            width={180}
-            height={180}
-            />
-            <div className="mx-8">
-            <p className="font-bold text-2xl opacity-80">Contract 2</p>
-            <p className="opacity-50 mb-2">Status</p>
-            <Button className="bg-[#00000080] text-white" size="lg">
-                View
-            </Button>
-            </div>
-        </div>
-        ),
-    },
-    {
-        id: 3,
-        content: (
-        <div className="flex items-start justify-start">
-            <Image
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwme89cM8YZvHcybGrZl_Obd9U9p5QabozJQ&s"
-            alt="Contract Image"
-            width={180}
-            height={180}
-            />
-            <div className="mx-8">
-            <p className="font-bold text-2xl opacity-80">Contract 3</p>
-            <p className="opacity-50 mb-2">Status</p>
-            <Button className="bg-[#00000080] text-white" size="lg">
-                View
-            </Button>
-            </div>
-        </div>
-        ),
-    },
-];
+import { useState } from "react";
+import { Document, Page, pdfjs } from "react-pdf";
+import "react-pdf/dist/esm/Page/TextLayer.css";
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 
-export default function ContractPage() {
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.mjs',
+  import.meta.url,
+).toString();
+
+export default function ContractsPage() {
+  const [numPages, setNumPages] = useState<number>();
+  const [pageNumber, setPageNumber] = useState<number>(1);
+
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
+    setNumPages(numPages);
+  }
+
   return (
     <div className="space-y-4">
       <h1 className="text-3xl font-bold opacity-80">My Contracts</h1>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4 flex-grow">
-          <Input placeholder="Search" icon={<Search size={20} />} />
-          <FilterIcon size={20} />
+      
+      <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-4">
+        <Document
+          file="/path-to-your-pdf.pdf"
+          onLoadSuccess={onDocumentLoadSuccess}
+          loading={<div>Loading PDF...</div>}
+        >
+          <Page 
+            pageNumber={pageNumber} 
+            renderTextLayer={false}
+            className="max-w-full h-auto"
+          />
+        </Document>
+        
+        <div className="flex justify-between items-center mt-4">
+          <button
+            disabled={pageNumber <= 1}
+            onClick={() => setPageNumber(pageNumber - 1)}
+            className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <p>
+            Page {pageNumber} of {numPages}
+          </p>
+          <button
+            disabled={pageNumber >= (numPages || 0)}
+            onClick={() => setPageNumber(pageNumber + 1)}
+            className="px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50"
+          >
+            Next
+          </button>
         </div>
       </div>
-
-      <MultiCard padding="md" data={ContractCards} direction="column" />
     </div>
   );
 }

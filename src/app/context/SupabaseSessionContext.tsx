@@ -28,7 +28,6 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
       setSession(session);
       setLoading(false);
     };
-
     getSession();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(

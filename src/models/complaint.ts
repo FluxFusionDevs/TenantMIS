@@ -7,6 +7,19 @@ export interface Complaint {
   status: Status;
   priority: Priority;
   category: Category;
+  files?: string[] | File[];
+  complaints_attachments?: ComplaintAttachment[];
+}
+
+export interface ComplaintAttachment {
+  attachment_id?: string;
+  complaint_id: string;
+  file_name: string;
+  file_type: string;
+  file_size: number;
+  file_url: string;
+  uploaded_at: string;
+  uploaded_by: string;
 }
 
 

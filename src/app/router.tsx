@@ -5,6 +5,8 @@ import Loading from "@/components/loading";
 import { useSession } from "./context/SupabaseSessionContext";
 import { useRouter } from "next/navigation";
 import { RoleRoutes } from "@/models/role";
+import { jwtDecode } from 'jwt-decode'
+import { CustomJwtPayload } from "@/models/jwt";
 
 const Router: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { session, loading } = useSession();
@@ -18,16 +20,17 @@ const Router: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         window.location.pathname.startsWith("/auth") ||
         window.location.pathname === "/"
       ) {
-        window.location.href = "/tenant/dashboard";
-        const role = session.user?.role;
-        if (role === RoleRoutes.TENANT) {
+        // window.location.href = "/tenant/dashboard";
+        const token = jwtDecode(session.access_token) as CustomJwtPayload;
+        const role = token.user_role;
+        if (role === "TENANT") {
           router.push(RoleRoutes.TENANT);
-        } else if (role === RoleRoutes.PROPERTYMANAGER) {
-          router.push(RoleRoutes.PROPERTYMANAGER);
-        } else if (role === RoleRoutes.FINANCESTAFF) {
-          router.push(RoleRoutes.FINANCESTAFF);
-        } else if (role === RoleRoutes.STAFF) {
-          router.push(RoleRoutes.STAFF);
+        } else if (role === "PROCURMENTMANAGER") {
+          router.push(RoleRoutes.PROCUREMENTMANAGER);
+        } else if (role === "FINANCEMANAGER") {
+          router.push(RoleRoutes.FINANCEMANAGER);
+        } else if (role === "STAFFMANAGER") {
+          router.push(RoleRoutes.STAFFMANAGER);
         } else {
           router.push("/auth/login");
         }
