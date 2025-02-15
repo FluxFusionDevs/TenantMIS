@@ -5,7 +5,7 @@ import Image from 'next/image'
 import React from 'react'
 const cardData = [
     {
-      id: 1,
+      id: "1",
       title: 'Card 1',
       description: "Description 1",
       content: (
@@ -25,7 +25,7 @@ const cardData = [
       ),
     },
     {
-      id: 2,
+      id: "2",
       title: 'Card 2',
       description: "Description 2",
       content: (
@@ -45,7 +45,7 @@ const cardData = [
       ),
     },
     {
-      id: 3,
+      id: "3",
       title: 'Card 3',
       description: "Description 3",
       content: (
@@ -68,19 +68,19 @@ const cardData = [
 
   const accountCardData = [
     {
-      id: 1,
+      id: "1",
       title: 'Card 1',
       description: "Description 1",
    
     },
     {
-      id: 2,
+      id: "2",
       title: 'Card 2',
       description: "Description 2",
    
     },
     {
-      id: 3,
+      id: "3",
       title: 'Card 3',
       description: "Description 3",
     },

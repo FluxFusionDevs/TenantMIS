@@ -9,7 +9,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 import { FileIcon, FilterIcon, PlusCircleIcon } from "lucide-react";
 import Image from "next/image";
-import { Search } from "@/components/search";
+import { Search } from "@/app/tenant/request/ui/search";
 import { onSelectSearchItem } from "./actions/onselectsearchitem";
 import { RequestForm } from "./addRequestForm";
 import { PaginationControls } from "@/components/pagination";
@@ -26,8 +26,8 @@ export default async function Page({ searchParams }: { searchParams: any }) {
   const res = await fetch(
     `${baseUrl}/tenant/request/getRequests?tenantId=${tenantId}&page=${currentPage}`
   );
+  
   const data = await res.json();
-
   const complaints: Complaint[] = data.complaints;
 
   if (!Array.isArray(complaints)) {

@@ -3,10 +3,7 @@
 import React from "react";
 import {
   Command,
-  CommandEmpty,
-  CommandGroup,
   CommandInput,
-  CommandItem,
   CommandList,
 } from "@/components/ui/command";
 import { supabase } from "@/lib/supabaseClient";

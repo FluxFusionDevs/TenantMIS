@@ -2,7 +2,7 @@ import logger from "@/logger/logger";
 import { supabase } from "./supabaseClient";
 import { v4 as uuidv4 } from 'uuid';
 
-export async function uploadFilesToBucket(files: File[], sourceId: string, tenantId: string, bucketName: string, folderName: string) {
+export async function uploadFilesToBucket(files: File[], sourceId: string, uploaderId: string, bucketName: string, folderName: string) {
     const fileUploads = [];
   
     for (const file of files) {
@@ -33,7 +33,7 @@ export async function uploadFilesToBucket(files: File[], sourceId: string, tenan
         file_type: file.type,
         file_size: file.size,
         file_url: publicUrl,
-        uploaded_by: tenantId
+        uploaded_by: uploaderId
       });
     }
   

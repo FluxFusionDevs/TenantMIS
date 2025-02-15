@@ -11,8 +11,8 @@ import {
 
 type CardData = {
   id?: string
-  title?: string
-  description?: string
+  title?: string | React.ReactNode
+  description?: string | React.ReactNode
   content?: React.ReactNode
   footer?: React.ReactNode
 }
