@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Upload, X } from "lucide-react";
 
 
-export function MultipleFileUploads({ formData }: { formData: FormData }) {
+export function MultipleFileUploads() {
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -29,14 +29,6 @@ export function MultipleFileUploads({ formData }: { formData: FormData }) {
     setFiles(files.filter((_, index) => index !== indexToRemove));
   };
 
-  useEffect(() => {
-    // Update form data whenever files change
-    files.forEach((file, index) => {
-      formData.append(`files`, file);
-    });
-  }, [files, formData]);
-
-
   return (
     <div className="w-full max-w-2xl mx-auto p-4">
       <div
@@ -50,6 +42,7 @@ export function MultipleFileUploads({ formData }: { formData: FormData }) {
           type="file"
           multiple
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          name="attachments"
           onChange={(e) => {
             const selectedFiles = Array.from(e.target.files || []);
             setFiles((prev) => [...prev, ...selectedFiles]);

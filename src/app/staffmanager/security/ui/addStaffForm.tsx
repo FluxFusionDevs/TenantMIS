@@ -19,9 +19,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Loader2, Minus } from "lucide-react";
-import { onSubmitStaff } from "./actions/onsubmitstaff";
+import { onSubmitStaff } from "../actions/onsubmitstaff";
 import { DayOfWeek, StaffShift, StaffStatus } from "@/models/staff";
 import { TimePicker } from "@/components/timePicker";
 type FormState = {
@@ -66,7 +66,6 @@ export function StaffForm({ userId }: { userId: string }) {
     },
   ]);
   
-  const filesFormData = new FormData();
 
   const handleShiftChange = (
     id: number,
@@ -99,13 +98,12 @@ export function StaffForm({ userId }: { userId: string }) {
     }
   };
 
-
   async function submitStaff(
     prevState: FormState,
     formData: FormData
   ): Promise<FormState> {
     try {
-      const files = filesFormData.getAll("files");
+      const files = formData.getAll("files");
       files.forEach((file) => {
         if (file instanceof Blob) {
           formData.append("files", file);
@@ -113,6 +111,7 @@ export function StaffForm({ userId }: { userId: string }) {
       });
 
       formData.append("staff_shifts", JSON.stringify(shifts));
+
       const response = await onSubmitStaff(formData);
       if (response.success) {
 

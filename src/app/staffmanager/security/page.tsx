@@ -13,7 +13,7 @@ import {
 import Image from "next/image";
 import { Search } from "./ui/search";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
-import { StaffForm } from "./addStaffForm";
+import { StaffForm } from "./ui/addStaffForm";
 import { onSelectSearchItem } from "./actions/onselectsearchitem";
 import { Button } from "@/components/ui/button";
 import { PaginationControls } from "@/components/pagination";
@@ -76,7 +76,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-3xl font-bold opacity-80">Housekeeping Management</h1>
+      <h1 className="text-3xl font-bold opacity-80">Security Management</h1>
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4 flex-grow mr-2">
           <Search

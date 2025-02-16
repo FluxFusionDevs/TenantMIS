@@ -1,18 +1,28 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { supabase } from "@/lib/supabaseClient"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { supabase } from "@/lib/supabaseClient";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
-  password: z.string().min(8, { message: "Password must be at least 8 characters." }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters." }),
 });
 
 export default function LoginForm() {
@@ -22,7 +32,7 @@ export default function LoginForm() {
       email: "",
       password: "",
     },
-  })
+  });
 
   const [error, setError] = React.useState<string | null>(null);
 
@@ -38,29 +48,9 @@ export default function LoginForm() {
     }
 
     setError(null);
-    
   }
 
-  // async function onSubmit(values: z.infer<typeof formSchema>) {
-  //   const res = await fetch('/auth', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({ type: 'signin', ...values }),
-  //   });
-
-  //   const data = await res.json();
-  //   const { message, status } = data;
-
-  //   if (status !== 200) {
-  //     setError(message);
-  //     return;
-  //   }
-
-  //   setError(null);
-  //   console.log("Message:", message , "Status:", status);
-  // }
+  const { isSubmitting } = form.formState;
 
   return (
     <Form {...form}>
@@ -92,8 +82,11 @@ export default function LoginForm() {
           )}
         />
         {error && <p className="text-red-500 text-center">{error}</p>}
-        <Button type="submit" className="w-full mt-2">Login</Button>
+        <Button type="submit" className="w-full mt-2">
+          {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
+          Login
+        </Button>
       </form>
     </Form>
-  )
+  );
 }

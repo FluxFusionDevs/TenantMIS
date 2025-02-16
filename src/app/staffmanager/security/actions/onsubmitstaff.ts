@@ -45,7 +45,7 @@ export async function onSubmitStaff(
     (typeof staffSchema)["_output"]
   >
 > {
-  const files = formData.getAll("files") as File[];
+  const picture = formData.get("picture") as File;
 
   const data: StaffWithShifts = {
     name: formData.get("name") as string,
@@ -88,7 +88,7 @@ export async function onSubmitStaff(
       ...shiftData,
       staff_id: staffData.staff_id,
     }));
-    
+
     const { error: shiftError } = await supabase
       .from("staff_shifts")
       .insert(shifts);
@@ -99,9 +99,9 @@ export async function onSubmitStaff(
       throw new Error("Error adding staff shifts");
     }
 
-    if (files && files.length > 0) {
+    if (picture) {
       const fileUploads = await uploadFilesToBucket(
-        files,
+        [picture],
         staffData.staff_id!,
         formData.get("userId") as string,
         "tenant-mis",
@@ -119,7 +119,8 @@ export async function onSubmitStaff(
 
       const { error: fileError } = await supabase
         .from("staff")
-        .update({ picture: fileUploads[0].file_url });
+        .update({ picture: fileUploads[0].file_url })
+        .eq("staff_id", staffData.staff_id);
 
       if (fileError) {
         logger.error(`Error saving file metadata: ${fileError.message}`);

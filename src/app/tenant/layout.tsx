@@ -12,8 +12,9 @@ import {
   LogOut,
 } from "lucide-react";
 import { constants } from "node:buffer";
-import React, { Usable } from "react";
+import React, { Suspense, Usable } from "react";
 import { MenuItem } from "@/models/sidebar-menu";
+import Loading from "@/components/loading";
 
 type Params = {
   userId: string;
