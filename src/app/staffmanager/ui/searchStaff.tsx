@@ -1,38 +1,19 @@
 "use client";
 
 import React from "react";
-import {
-  Command,
-  CommandInput,
-  CommandList,
-} from "@/components/ui/command";
-import { supabase } from "@/lib/supabaseClient";
-import { Staff } from "@/models/staff";
+import { Command, CommandInput, CommandList } from "@/components/ui/command";
+import { Staff, StaffCategory } from "@/models/staff";
+import Link from "next/link";
 
 interface SearchProps {
   placeholder?: string;
-  onSelect?: (suggestion: Staff) => void;
+  role: StaffCategory;
 }
 
-export function Search({ placeholder = "Search...", onSelect }: SearchProps) {
+export function Search({ placeholder = "Search...", role }: SearchProps) {
   const [suggestions, setSuggestions] = React.useState<Staff[]>([]);
   const [searchQuery, setSearchQuery] = React.useState<string>("");
-  const userIdRef = React.useRef<string | null>(null);
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-
-  React.useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        userIdRef.current = user?.id || null;
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-    fetchUser();
-  }, []);
 
   const handleSearch = async (value: string) => {
     setSearchQuery(value);
@@ -46,7 +27,7 @@ export function Search({ placeholder = "Search...", onSelect }: SearchProps) {
     timeoutRef.current = setTimeout(async () => {
       try {
         const data = await fetch(
-          `/staffmanager/getStaffs?role=SECURITY&search=${value}`,
+          `/staffmanager/api/getStaffs?role=${role}&search=${value}`,
           { cache: "no-store" }
         );
         const { staffs } = await data.json();
@@ -75,13 +56,15 @@ export function Search({ placeholder = "Search...", onSelect }: SearchProps) {
             ) : (
               <div className="px-1">
                 {suggestions.map((suggestion) => (
-                  <div
+                  <Link
                     key={suggestion.staff_id}
-                    onClick={() => onSelect && onSelect(suggestion)}
-                    className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                    href={`/staffmanager/${role.toLocaleLowerCase()}/details/${suggestion.staff_id}`}
+                    passHref
                   >
-                    {suggestion.name}
-                  </div>
+                    <div className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                      {suggestion.name}
+                    </div>
+                  </Link>
                 ))}
               </div>
             )}

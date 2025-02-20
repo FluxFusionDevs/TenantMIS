@@ -26,14 +26,14 @@ export interface Staff {
   phone_number: string;
   email: string;
   status: StaffStatus;
-  picture: string;
+  picture?: string;
 }
 
 export interface StaffShift {
   shift_id: number;
-  staff_id: number;
+  staff_id: string;
   day_of_week: DayOfWeek;
-  shift_start: string; // Time format "HH:mm:ss"
+  shift_start: string; 
   shift_end: string;
 }
 

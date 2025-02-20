@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabaseServer";
 import logger from "@/logger/logger";
 
 interface ComplaintsResponse {
@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const role = searchParams.get("role");
   const staffId = searchParams.get("staffId");
-
+  const supabase = await createClient();
 let query = supabase
   .from("staff_tasks")
   .select(`

@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabaseClient";
 import Router from "@/app/router";
 
 interface SessionContextProps {
@@ -21,6 +21,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const supabase = createClient();
     const getSession = async () => {
       const {
         data: { session },

@@ -1,6 +1,6 @@
 "use server";
 
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabaseClient";
 import { uploadFilesToBucket } from "@/lib/supabaseUploader";
 import logger from "@/logger/logger";
 import {

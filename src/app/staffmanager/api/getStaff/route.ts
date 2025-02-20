@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabaseServer";
 import logger from "@/logger/logger";
 import { StaffWithShifts } from "@/models/staff";
 
@@ -10,6 +10,7 @@ interface StaffResponse {
 }
 
 export async function GET(req: NextRequest) {
+  const supabase = await createClient();
   const { searchParams } = new URL(req.url);
   const staffId = searchParams.get("staffId");
   const role = searchParams.get("role");
@@ -27,6 +28,7 @@ export async function GET(req: NextRequest) {
     .select(`
       *,
       staff_shifts (
+      staff_id,
         shift_id,
         day_of_week,
         shift_start,

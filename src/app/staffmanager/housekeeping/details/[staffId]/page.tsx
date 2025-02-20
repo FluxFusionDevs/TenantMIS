@@ -2,39 +2,31 @@ import { formatDateTime, isImageFile } from "@/app/utils";
 import { BackButton } from "@/components/back-button";
 import { MultiCard } from "@/components/multi-card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabaseServer";
-import { Complaint } from "@/models/complaint";
 import { StaffWithShifts } from "@/models/staff";
 import { Task } from "@/models/task";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import {
-  ArrowLeft,
-  Edit,
   FileIcon,
-  ImageIcon,
   Mail,
   Phone,
 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { EditStaffForm } from "../../../ui/editStaffForm";
 import ProfilePic from "@/components/profile-pic";
 import { updateProfileImage } from "../../../actions/onupdatestaff";
 
 export default async function Page({ params }: { params: any }) {
-  const client = await createClient();
-  const tenantId = (await client.auth.getUser()).data.user!.id;
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const { staffId } = await params;
   const res = await fetch(
-    `${baseUrl}/staffmanager/api/getStaff?staffId=${staffId}&role=SECURITY`
+    `${baseUrl}/staffmanager/api/getStaff?staffId=${staffId}&role=HOUSEKEEPING`
   );
   const data = await res.json();
   const staff: StaffWithShifts = data.staff;
 
   const res2 = await fetch(
-    `${baseUrl}/staffmanager/api/getTasks?role=SECURITY&staffId=${staffId}`
+    `${baseUrl}/staffmanager/api/getTasks?role=HOUSEKEEPING&staffId=${staffId}`
   );
 
   const data2 = await res2.json();

@@ -1,6 +1,6 @@
 "use server";
 
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabaseServer";
 import { uploadFilesToBucket } from "@/lib/supabaseUploader";
 import logger from "@/logger/logger";
 import {
@@ -45,11 +45,12 @@ export async function onSubmitStaff(
     (typeof staffSchema)["_output"]
   >
 > {
+  const supabase = await createClient();
   const picture = formData.get("picture") as File;
 
   const data: StaffWithShifts = {
     name: formData.get("name") as string,
-    role: validateCategory("SECURITY" as string),
+    role: validateCategory(formData.get("role") as string),
     phone_number: formData.get("phone_number") as string,
     email: formData.get("email") as string,
     status: validateStatus(formData.get("status") as string),

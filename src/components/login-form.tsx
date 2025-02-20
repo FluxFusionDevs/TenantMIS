@@ -15,7 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabaseClient";
 import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
@@ -37,6 +37,7 @@ export default function LoginForm() {
   const [error, setError] = React.useState<string | null>(null);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const supabase = createClient();
     const { data, error } = await supabase.auth.signInWithPassword({
       email: values.email,
       password: values.password,

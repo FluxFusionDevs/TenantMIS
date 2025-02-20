@@ -9,12 +9,10 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 import { FileIcon, FilterIcon, Plus, PlusCircleIcon } from "lucide-react";
 import Image from "next/image";
-import { Search } from "@/app/tenant/request/ui/search";
-import { onSelectSearchItem } from "./actions/onselectsearchitem";
-import { RequestForm } from "./ui/addRequestForm";
 import { PaginationControls } from "@/components/pagination";
 import { formatDateTime, isImageFile } from "@/app/utils";
 import Link from "next/link";
+import { Search } from "../ui/searchComplaint";
 
 export default async function Page({ searchParams }: { searchParams: any }) {
   const client = await createClient();
@@ -24,7 +22,8 @@ export default async function Page({ searchParams }: { searchParams: any }) {
   const currentPage = Number(await params.page) || 1;
 
   const res = await fetch(
-    `${baseUrl}/tenant/request/getRequests?tenantId=${tenantId}&page=${currentPage}`
+    `${baseUrl}/staffmanager/api/getRequests`,
+    { cache: "no-store" }
   );
   
   const data = await res.json();
@@ -75,11 +74,11 @@ export default async function Page({ searchParams }: { searchParams: any }) {
             {renderAttachment()}
             <div className="mx-8">
               <p className="font-bold text-2xl opacity-80">{complaint.subject}</p>
-              <span className="text-sm opacity-75">
+              {/* <span className="text-sm opacity-75">
                 {formatDateTime(complaint.created_at!)}
-              </span>
+              </span> */}
               <p className="opacity-50 mb-2">{complaint.status}</p>
-              <Link href={`/tenant/request/details/${complaint.complaint_id}`}>
+              <Link href={`/staffmanager/complaints/details/${complaint.complaint_id}`}>
                 <Button className="bg-[#00000080] hover:bg-[#00000095] text-white" size="lg">
                   View
                 </Button>
@@ -98,27 +97,19 @@ export default async function Page({ searchParams }: { searchParams: any }) {
         <div className="flex items-center space-x-4 flex-grow mr-2">
           <Search
             placeholder="Search request..."
-            onSelect={onSelectSearchItem}
           />
           <Button>
             <FilterIcon size={20} />
             </Button>
         </div>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>
-            <Plus size={20} />
-            </Button>
-          </DialogTrigger>
-          <RequestForm tenantId={tenantId} />
-        </Dialog>
+       
       </div>
 
       <MultiCard padding="md" data={cardData} direction="column" />
       <PaginationControls
         currentPage={currentPage}
         totalPages={data.totalPages}
-        redirectPath="/tenant/request"
+        redirectPath="/staffmanager/complaints"
       />
     </div>
   );

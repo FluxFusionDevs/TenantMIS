@@ -21,9 +21,16 @@ import {
 } from "@/components/ui/dialog";
 import { useActionState, useEffect, useState } from "react";
 import { Loader2, Minus } from "lucide-react";
-import { onSubmitStaff } from "../actions/onsubmitstaff";
-import { DayOfWeek, StaffShift, StaffStatus } from "@/models/staff";
+import {
+  DayOfWeek,
+  StaffCategory,
+  StaffShift,
+  StaffStatus,
+  StaffWithShifts,
+} from "@/models/staff";
 import { TimePicker } from "@/components/timePicker";
+import { onUpdateStaff } from "../actions/onupdatestaff";
+
 type FormState = {
   success: boolean;
   messages?: string[];
@@ -50,7 +57,7 @@ function formatValidationErrors(errors: string): string[] {
   }
 }
 
-export function StaffForm({ userId }: { userId: string }) {
+export function EditStaffForm({ staff }: { staff: StaffWithShifts }) {
   const [state, formAction, pending] = useActionState(
     submitStaff,
     initialState
@@ -59,45 +66,52 @@ export function StaffForm({ userId }: { userId: string }) {
   const [shifts, setShifts] = useState<StaffShift[]>([
     {
       shift_id: 1,
-      staff_id: 0,
+      staff_id: "",
       day_of_week: "" as DayOfWeek,
       shift_start: "",
       shift_end: "",
     },
   ]);
-  
 
+  useEffect(() => {
+    setShifts(staff.staff_shifts);
+  }, [staff]);
+
+  // Replace the handleShiftChange function
   const handleShiftChange = (
-    id: number,
+    index: number,
     field: keyof StaffShift,
     value: string
   ) => {
     setShifts(
-      shifts.map((shift) =>
-        shift.shift_id === id ? { ...shift, [field]: value } : shift
+      shifts.map((shift, i) =>
+        i === index ? { ...shift, [field]: value } : shift
       )
     );
   };
 
+  // Update the addShift function
   const addShift = () => {
-    const newId = Math.max(...shifts.map((s) => s.shift_id)) + 1;
-    setShifts([ ...shifts, {
-      shift_id: newId,
-      staff_id: 0,
-      day_of_week: "" as DayOfWeek,
-      shift_start: "",
-      shift_end: "",
-    }]);
+    setShifts([
+      ...shifts,
+      {
+        shift_id: shifts.length + 1,
+        staff_id: staff.staff_id!, // Use the staff_id from props
+        day_of_week: "" as DayOfWeek,
+        shift_start: "",
+        shift_end: "",
+      },
+    ]);
   };
 
-  const removeShift = (id: number) => {
+  // Update the removeShift function
+  const removeShift = (index: number) => {
     if (shifts.length > 1) {
-      setShifts(shifts.filter((shift) => shift.shift_id !== id));
+      setShifts(shifts.filter((_, i) => i !== index));
     } else {
       console.log("Cannot remove last shift");
     }
   };
-
   async function submitStaff(
     prevState: FormState,
     formData: FormData
@@ -111,25 +125,22 @@ export function StaffForm({ userId }: { userId: string }) {
       });
 
       formData.append("staff_shifts", JSON.stringify(shifts));
+      formData.append("role", staff.role as StaffCategory);
 
-      const response = await onSubmitStaff(formData);
-      if (response.success) {
-
+      const response = await onUpdateStaff(formData);
+      console.log("Response", response);
+      if (response && response.success) {
         return {
           success: true,
-          messages: ["Staff added successfully"],
+          messages: ["Staff updated successfully"],
         };
-
       } else {
-
         const formattedErrors = formatValidationErrors(response.error.message);
         return {
           success: false,
           messages: formattedErrors,
         };
-
       }
-
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : "An unexpected error occurred";
@@ -138,7 +149,6 @@ export function StaffForm({ userId }: { userId: string }) {
         success: false,
         messages: [errorMessage],
       };
-
     } finally {
       console.log("Request submitted");
     }
@@ -146,20 +156,18 @@ export function StaffForm({ userId }: { userId: string }) {
 
   return (
     <DialogContent className="sm:max-w-[600px]">
-      <DialogTitle>Add a new staff</DialogTitle>
+      <DialogTitle>Edit staff</DialogTitle>
       <DialogHeader>
-        <DialogDescription>
-          Fill in the form below to add a new staff
-        </DialogDescription>
+        <DialogDescription>Edit staff</DialogDescription>
       </DialogHeader>
       <form action={formAction} className="grid gap-4 py-4">
-        <input type="hidden" name="userId" value={userId} />
+        <input type="hidden" name="staff_id" value={staff.staff_id} />
         <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="name" className="text-right">
             Name
           </Label>
           <div className="col-span-3">
-            <Input id="name" name="name" />
+            <Input id="name" name="name" defaultValue={staff.name} />
           </div>
         </div>
         <div className="grid grid-cols-4 items-center gap-4">
@@ -171,6 +179,7 @@ export function StaffForm({ userId }: { userId: string }) {
               id="phone_number"
               name="phone_number"
               className="col-span-3"
+              defaultValue={staff.phone_number}
             />
           </div>
         </div>
@@ -179,14 +188,19 @@ export function StaffForm({ userId }: { userId: string }) {
             Email
           </Label>
           <div className="col-span-3">
-            <Input id="email" name="email" className="col-span-3" />
+            <Input
+              id="email"
+              name="email"
+              className="col-span-3"
+              defaultValue={staff.email}
+            />
           </div>
         </div>
         <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="status" className="text-right">
             Status
           </Label>
-          <Select name="status">
+          <Select name="status" defaultValue={staff.status}>
             <SelectTrigger className="col-span-3">
               <SelectValue placeholder="Select a status" />
             </SelectTrigger>
@@ -202,7 +216,7 @@ export function StaffForm({ userId }: { userId: string }) {
             </SelectContent>
           </Select>
         </div>
-        <div className="grid grid-cols-4 items-center gap-4">
+        {/* <div className="grid grid-cols-4 items-center gap-4">
           <Label htmlFor="picture" className="text-right">
             Picture
           </Label>
@@ -214,17 +228,21 @@ export function StaffForm({ userId }: { userId: string }) {
               className="col-span-3"
             />
           </div>
-        </div>
+        </div> */}
         <div className="grid grid-cols-4 items-start gap-4">
           <Label htmlFor="shifts" className="text-right">
             Shifts
           </Label>
           <div className="col-span-4 space-y-4 h-[300px] overflow-auto">
-            {shifts.map((shift) => (
-              <div key={shift.shift_id} className="grid grid-cols-[2fr_2fr_2fr_auto] gap-2 items-center">                <Select
+            {shifts.map((shift, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-[2fr_2fr_2fr_auto] gap-2 items-center"
+              >
+                <Select
                   value={shift.day_of_week}
                   onValueChange={(value) =>
-                    handleShiftChange(shift.shift_id, "day_of_week", value)
+                    handleShiftChange(index, "day_of_week", value)
                   }
                 >
                   <SelectTrigger>
@@ -241,26 +259,24 @@ export function StaffForm({ userId }: { userId: string }) {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-
                 <TimePicker
                   value={shift.shift_start}
                   onChange={(value) =>
-                    handleShiftChange(shift.shift_id, "shift_start", value)
+                    handleShiftChange(index, "shift_start", value)
                   }
                 />
                 <TimePicker
                   value={shift.shift_end}
                   onChange={(value) =>
-                    handleShiftChange(shift.shift_id, "shift_end", value)
+                    handleShiftChange(index, "shift_end", value)
                   }
                 />
-
                 {shifts.length > 1 && (
                   <Button
                     type="button"
                     variant="destructive"
                     size="icon"
-                    onClick={() => removeShift(shift.shift_id)}
+                    onClick={() => removeShift(index)}
                     className="h-10 w-10"
                   >
                     <Minus className="h-4 w-4" />
@@ -286,8 +302,8 @@ export function StaffForm({ userId }: { userId: string }) {
                   state.success ? "text-green-500" : "text-red-500"
                 }`}
               >
-                {state.messages.map((message) => (
-                  <li key={message}>{message}</li>
+                {state.messages.map((message, index) => (
+                  <li key={`error-${index}`}>{message}</li>
                 ))}
               </ul>
             </div>
@@ -296,7 +312,7 @@ export function StaffForm({ userId }: { userId: string }) {
         <DialogFooter>
           <Button type="submit" disabled={pending}>
             {pending && <Loader2 className="h-4 w-4 animate-spin" />}
-            Add Staff
+            Edit Staff
           </Button>
         </DialogFooter>
       </form>

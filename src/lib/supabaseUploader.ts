@@ -1,5 +1,5 @@
 import logger from "@/logger/logger";
-import { supabase } from "./supabaseClient";
+import { createClient } from "./supabaseClient";
 import { v4 as uuidv4 } from 'uuid';
 
 export async function uploadFilesToBucket(files: File[], sourceId: string, uploaderId: string, bucketName: string, folderName: string) {

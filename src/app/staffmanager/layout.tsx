@@ -2,7 +2,7 @@
 
 import { AppSidebar } from "@/components/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabaseClient";
 import {
   Home,
   Inbox,
@@ -29,6 +29,7 @@ export default function HomeLayout({
   children: React.ReactNode;
   params: Usable<Params>;
 }) {
+  const supabase = createClient();
   const signOut = async () => {
     await supabase.auth.signOut();
   };
@@ -50,11 +51,15 @@ export default function HomeLayout({
       icon: Shield,
     },
     {
-      title: "Technicians",
-      url: `/staffmanager/technicians`,
+      title: "Technician",
+      url: `/staffmanager/technician`,
       icon: Wrench,
     },
-  
+    {
+      title: "Schedules",
+      url: `/staffmanager/schedules`,
+      icon: TimerIcon,
+    },
     {
       title: "Logout",
       action: signOut,

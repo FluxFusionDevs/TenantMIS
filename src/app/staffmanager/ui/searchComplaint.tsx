@@ -1,24 +1,19 @@
 "use client";
 
 import React from "react";
-import {
-  Command,
-  CommandInput,
-  CommandList,
-} from "@/components/ui/command";
+import { Command, CommandInput, CommandList } from "@/components/ui/command";
+import { Staff, StaffCategory } from "@/models/staff";
+import Link from "next/link";
 import { Complaint } from "@/models/complaint";
 
 interface SearchProps {
   placeholder?: string;
-  onSelect?: (suggestion: Complaint) => void;
 }
 
-export function Search({ placeholder = "Search...", onSelect }: SearchProps) {
+export function Search({ placeholder = "Search..." }: SearchProps) {
   const [suggestions, setSuggestions] = React.useState<Complaint[]>([]);
   const [searchQuery, setSearchQuery] = React.useState<string>("");
-  const userIdRef = React.useRef<string | null>(null);
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-
 
   const handleSearch = async (value: string) => {
     setSearchQuery(value);
@@ -32,10 +27,12 @@ export function Search({ placeholder = "Search...", onSelect }: SearchProps) {
     timeoutRef.current = setTimeout(async () => {
       try {
         const data = await fetch(
-          `/tenant/request/getRequests?tenantId=${userIdRef.current}&search=${value}`,
+          `/staffmanager/api/getRequests?search=${value}`,
           { cache: "no-store" }
         );
+        console.log("data", data);
         const { complaints } = await data.json();
+
         setSuggestions(complaints || []);
       } catch (error) {
         console.error("Error fetching suggestions:", error);
@@ -61,13 +58,15 @@ export function Search({ placeholder = "Search...", onSelect }: SearchProps) {
             ) : (
               <div className="px-1">
                 {suggestions.map((suggestion) => (
-                  <div
+                  <Link
                     key={suggestion.complaint_id}
-                    onClick={() => onSelect && onSelect(suggestion)}
-                    className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                    href={`/staffmanager/complaints/details/${suggestion.complaint_id}`}
+                    passHref
                   >
-                    {suggestion.subject}
-                  </div>
+                    <div className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                      {suggestion.subject}
+                    </div>
+                  </Link>
                 ))}
               </div>
             )}
