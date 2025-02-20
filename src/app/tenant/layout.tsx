@@ -2,7 +2,7 @@
 
 import { AppSidebar } from "@/components/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { supabase } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabaseClient";
 import {
   Home,
   Inbox,
@@ -12,8 +12,9 @@ import {
   LogOut,
 } from "lucide-react";
 import { constants } from "node:buffer";
-import React, { Usable } from "react";
+import React, { Suspense, Usable } from "react";
 import { MenuItem } from "@/models/sidebar-menu";
+import Loading from "@/components/loading";
 
 type Params = {
   userId: string;

@@ -11,8 +11,8 @@ import {
 
 type CardData = {
   id?: string
-  title?: string
-  description?: string
+  title?: string | React.ReactNode
+  description?: string | React.ReactNode
   content?: React.ReactNode
   footer?: React.ReactNode
 }
@@ -28,13 +28,14 @@ type MultiCardProps = {
   data: CardData[]
   direction: "row" | "column"
   padding?: keyof typeof paddingSizes
+  className?: string
 }
 
 
 
-export function MultiCard({ data, direction, padding = "md" }: MultiCardProps) {
+export function MultiCard({ data, direction, padding = "md", className }: MultiCardProps) {
   return (
-    <div className={`grid gap-4 ${direction === "row" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-rows-1"}`}>
+    <div className={`grid gap-4 ${direction === "row" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-rows-1"} ${className}`}>
       {data.map((item) => (
         <Card key={item.id}>
           {item.title || item.description ? (

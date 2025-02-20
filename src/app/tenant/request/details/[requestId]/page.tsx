@@ -1,4 +1,5 @@
 import { formatDateTime, isImageFile } from "@/app/utils";
+import { BackButton } from "@/components/back-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabaseServer";
 import { Complaint } from "@/models/complaint";
@@ -16,11 +17,11 @@ export default async function Page({ params }: { params: any }) {
   );
   const data = await res.json();
   const complaint: Complaint = data.complaint;
+
   return (
     <div className="flex flex-col md:flex-row items-start p-4 md:p-8 gap-4 md:gap-8 w-full">
-      <Link href="/tenant/request">
-        <ArrowLeft className="w-8 h-8" />
-      </Link>
+      <BackButton />
+
       <div className="flex flex-col gap-4">
         {complaint.complaints_attachments &&
           complaint.complaints_attachments.length > 0 && (
@@ -29,7 +30,7 @@ export default async function Page({ params }: { params: any }) {
               className="rounded-lg overflow-hidden cursor-pointer hover:opacity-80"
             >
               {isImageFile(complaint.complaints_attachments[0].file_type) ? (
-                  <Image
+                <Image
                   width={500}
                   height={500}
                   src={complaint.complaints_attachments[0].file_url}

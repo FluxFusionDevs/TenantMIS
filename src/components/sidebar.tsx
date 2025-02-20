@@ -13,6 +13,7 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { MenuItem } from "@/models/sidebar-menu";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export function AppSidebar({
@@ -37,13 +38,23 @@ export function AppSidebar({
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild size={"lg"}>
-                    <button
-                      onClick={() => item.url ? handleClick(item.url): item.action && item.action() }
-                      className="flex items-center space-x-2"
-                    >
-                      <item.icon />
-                      <span className="text-lg">{item.title}</span>
-                    </button>
+                  {item.url ? (
+                      <Link prefetch={true}
+                        href={item.url}
+                        className="flex items-center space-x-2"
+                      >
+                        <item.icon />
+                        <span className="text-lg">{item.title}</span>
+                      </Link>
+                    ) : (
+                      <button
+                        onClick={item.action}
+                        className="flex items-center space-x-2"
+                      >
+                        <item.icon />
+                        <span className="text-lg">{item.title}</span>
+                      </button>
+                    )}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

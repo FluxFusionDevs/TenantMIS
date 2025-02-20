@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabaseClient";
 import logger from "@/logger/logger";
+import { createClient } from "@/lib/supabaseServer";
 
 interface ComplaintsResponse {
   complaints: any;
@@ -12,20 +12,14 @@ interface ComplaintsResponse {
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const tenantId = searchParams.get("tenantId");
   const searchQuery = searchParams.get("search");
   const page = parseInt(searchParams.get("page") || "1");
   const pageSize = 2;
   const start = (page - 1) * pageSize;
   const end = start + pageSize - 1;
 
-  if (!tenantId) {
-    return NextResponse.json({
-      message: "Tenant ID is required",
-      status: 400,
-    });
-  }
-
+  const supabase = await createClient();
+  
   let query = supabase
   .from("complaints")
   .select(`
@@ -39,7 +33,6 @@ export async function GET(req: NextRequest) {
       uploaded_at
     )
   `, { count: "exact" })
-  .eq("tenant_id", tenantId)
   .range(start, end);
 
   if (searchQuery) {
@@ -56,7 +49,7 @@ export async function GET(req: NextRequest) {
     });
   }
 
-  logger.info(`Successfully fetched complaints for tenant ${tenantId}`);
+  logger.info(`Successfully fetched complaints`);
   return NextResponse.json<ComplaintsResponse>({
     complaints,
     totalPages: Math.ceil((count || 0) / pageSize),

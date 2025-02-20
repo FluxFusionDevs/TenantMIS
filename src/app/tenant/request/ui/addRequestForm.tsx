@@ -1,6 +1,6 @@
 "use client";
 
-import { onSubmitRequest } from "./actions/onsubmitrequest";
+import { onSubmitRequest } from "../actions/onsubmitrequest";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -57,19 +57,12 @@ export function RequestForm({ tenantId }: { tenantId: string }) {
     submitRequest,
     initialState
   );
-  const filesFormData = new FormData();
 
   async function submitRequest(
     prevState: FormState,
     formData: FormData
   ): Promise<FormState> {
     try {
-      const files = filesFormData.getAll("files");
-      files.forEach((file) => {
-        if (file instanceof Blob) {
-          formData.append("files", file);
-        }
-      });
 
       const response = await onSubmitRequest(formData);
 
@@ -200,7 +193,7 @@ export function RequestForm({ tenantId }: { tenantId: string }) {
             </div>
           )}
         </div>
-        <MultipleFileUploads formData={filesFormData} />
+        <MultipleFileUploads />
         <DialogFooter>
           <Button type="submit" disabled={pending}>
             {pending && <Loader2 className="h-4 w-4 animate-spin" />}

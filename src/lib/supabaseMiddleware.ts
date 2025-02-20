@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
+  
   let supabaseResponse = NextResponse.next({
     request,
   })
@@ -26,6 +27,10 @@ export async function updateSession(request: NextRequest) {
       },
     }
   )
+  const requestCookies = request.cookies.getAll()
+  requestCookies.forEach(({ name, value }) => {
+    supabaseResponse.cookies.set(name, value)
+  })
 
   // Do not run code between createServerClient and
   // supabase.auth.getUser(). A simple mistake could make it very hard to debug
@@ -35,15 +40,12 @@ export async function updateSession(request: NextRequest) {
 
   const {
     data: { user },
-  } = await supabase.auth.getUser()
-  if (
-    !user &&
-    // !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth')) {
-    // no user, potentially respond by redirecting the user to the login page
+  } = await supabase.auth.getUser();
+
+  console.log("url in middleware:", request.nextUrl.pathname)
+  // Handle regular routes
+  if (!user && !request.nextUrl.pathname.startsWith('/auth')) {
     const url = request.nextUrl.clone()
-    console.log('Redirecting to /auth/login')
-    return;
     url.pathname = '/auth/login'
     return NextResponse.redirect(url)
   }
@@ -60,6 +62,8 @@ export async function updateSession(request: NextRequest) {
   //    return myNewResponse
   // If this is not done, you may be causing the browser and server to go out
   // of sync and terminate the user's session prematurely!
+  // console.log("RequestCookies in middleware:", request.cookies.getAll())
+ 
 
   return supabaseResponse
 }
