@@ -35,7 +35,7 @@ type MultiCardProps = {
 
 export function MultiCard({ data, direction, padding = "md", className }: MultiCardProps) {
   return (
-    <div className={`grid gap-4 ${direction === "row" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-rows-1"} ${className}`}>
+    <div className={`flex gap-4 ${direction === "row" ? "flex-row overflow-x-auto" : "flex-col"} ${className}`}>
       {data.map((item) => (
         <Card key={item.id}>
           {item.title || item.description ? (

@@ -1,14 +1,14 @@
 import logger from "@/logger/logger";
-import { createClient } from "./supabaseClient";
+import { createClient } from "./supabaseServer";
 import { v4 as uuidv4 } from 'uuid';
 
 export async function uploadFilesToBucket(files: File[], sourceId: string, uploaderId: string, bucketName: string, folderName: string) {
     const fileUploads = [];
-  
+    const supabase = await createClient();
     for (const file of files) {
       const fileExt = file.name.split('.').pop();
       const fileName = `${folderName}/${sourceId}/${uuidv4()}.${fileExt}`;
-  
+      
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from(bucketName)
         .upload(fileName, file, {

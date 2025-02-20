@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabaseClient";
+import { createClient } from "@/lib/supabaseServer";
 import { uploadFilesToBucket } from "@/lib/supabaseUploader";
 import logger from "@/logger/logger";
 import {
@@ -34,6 +34,7 @@ export async function onSubmitRequest(
     (typeof requestSchema)["_output"]
   >
 > {
+  const supabase = await createClient();
   const files = formData.getAll("attachments") as File[];
   const data: Complaint = {
     subject: formData.get("subject") as string,
