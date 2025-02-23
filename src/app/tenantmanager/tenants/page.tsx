@@ -1,4 +1,4 @@
-'use client'
+'use server'
 
 import { Bell, Filter, Plus } from 'lucide-react';
 import Image from 'next/image';

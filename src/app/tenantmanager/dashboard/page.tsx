@@ -1,4 +1,4 @@
-'use client';
+'use server';
 
 import React from 'react';
 import { MultiCard } from '@/components/multi-card';
@@ -70,7 +70,7 @@ const UserProfile = () => {
   );
 };
 
-export default function ManagerDashboard() {
+export default async function ManagerDashboard() {
   return (
     <div className="space-y-4">
       {/* Header Section */}

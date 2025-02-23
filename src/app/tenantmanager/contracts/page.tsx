@@ -1,4 +1,4 @@
-'use client'
+'use server'
 
 import { MultiCard } from '@/components/multi-card'
 import Image from 'next/image'
