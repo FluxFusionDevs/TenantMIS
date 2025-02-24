@@ -1,65 +1,60 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabaseServer";
 import logger from "@/logger/logger";
-import { StaffWithShifts } from "@/models/staff";
+import { createClient } from "@/lib/supabaseServer";
 
-interface StaffResponse {
-  staff: StaffWithShifts;
+interface ComplaintsResponse {
+  complaints: any;
   message: string;
   status: number;
+  totalPages: number;
+  currentPage: number;
 }
 
 export async function GET(req: NextRequest) {
-  const supabase = await createClient();
   const { searchParams } = new URL(req.url);
-  const staffId = searchParams.get("staffId");
-  const role = searchParams.get("role");
+  const searchQuery = searchParams.get("search");
+  const page = parseInt(searchParams.get("page") || "1");
+  const pageSize = 2;
+  const start = (page - 1) * pageSize;
+  const end = start + pageSize - 1;
 
-  if (!staffId) {
-    logger.error("Staff ID is required");
+  const supabase = await createClient();
+  
+  let query = supabase
+  .from("complaints")
+  .select(`
+    *,
+    complaints_attachments (
+      attachment_id,
+      file_name,
+      file_type,
+      file_size,
+      file_url,
+      uploaded_at
+    )
+  `, { count: "exact" })
+  .range(start, end);
+
+  if (searchQuery) {
+    query = query.or(`subject.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+  }
+
+  const { data: complaints, error: complaintsError, count } = await query;
+
+  if (complaintsError) {
+    logger.error(`Complaints Error: ${complaintsError.message}`);
     return NextResponse.json({
-      message: "Staff ID is required",
-      status: 400,
+      message: "Error fetching complaints",
+      status: complaintsError.code,
     });
   }
 
-  const { data: staff, error: staffError } = await supabase
-    .from("staff")
-    .select(`
-      *,
-      staff_shifts (
-      staff_id,
-        shift_id,
-        day_of_week,
-        shift_start,
-        shift_end
-      )
-    `)
-    .eq("staff_id", staffId)
-    .eq("role", role)
-    .single();
-
-
-  if (staffError) {
-    logger.error(`Staff Error: ${staffError.message}`);
-    return NextResponse.json({
-      message: "Error fetching staff",
-      status: staffError.code,
-    });
-  }
-
-  if (!staff) {
-    logger.error(`Staff not found with ID: ${staffId}`);
-    return NextResponse.json({
-      message: "Staff not found",
-      status: 404,
-    });
-  }
-
-  logger.info(`Successfully fetched staff with ID ${staffId}`);
-  return NextResponse.json<StaffResponse>({
-    staff,
-    message: "Successfully fetched staff",
+  logger.info(`Successfully fetched complaints`);
+  return NextResponse.json<ComplaintsResponse>({
+    complaints,
+    totalPages: Math.ceil((count || 0) / pageSize),
+    currentPage: page,
+    message: "Complaints fetched successfully",
     status: 200,
   });
 }
