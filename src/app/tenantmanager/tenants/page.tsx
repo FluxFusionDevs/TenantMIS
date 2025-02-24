@@ -79,7 +79,7 @@ const UserProfile = () => (
   </div>
 );
 
-export default function TenantManagement() {
+export default async function TenantManagement() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}

@@ -60,7 +60,7 @@ const UserProfile = () => (
   </div>
 );
 
-export default function Dashboard() {
+export default async function Dashboard() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
