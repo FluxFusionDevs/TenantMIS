@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import logger from "@/logger/logger";
 import { createClient } from "@/lib/supabaseServer";
 
-interface ComplaintsResponse {
-  complaints: any;
+interface contractsResponse {
+  contracts: any;
   message: string;
   status: number;
   totalPages: number;
@@ -21,10 +21,10 @@ export async function GET(req: NextRequest) {
   const supabase = await createClient();
   
   let query = supabase
-  .from("complaints")
+  .from("contracts")
   .select(`
     *,
-    complaints_attachments (
+    contracts_attachments (
       attachment_id,
       file_name,
       file_type,
@@ -39,22 +39,22 @@ export async function GET(req: NextRequest) {
     query = query.or(`subject.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
   }
 
-  const { data: complaints, error: complaintsError, count } = await query;
+  const { data: contracts, error: contractsError, count } = await query;
 
-  if (complaintsError) {
-    logger.error(`Complaints Error: ${complaintsError.message}`);
+  if (contractsError) {
+    logger.error(`contracts Error: ${contractsError.message}`);
     return NextResponse.json({
-      message: "Error fetching complaints",
-      status: complaintsError.code,
+      message: "Error fetching contracts",
+      status: contractsError.code,
     });
   }
 
-  logger.info(`Successfully fetched complaints`);
-  return NextResponse.json<ComplaintsResponse>({
-    complaints,
+  logger.info(`Successfully fetched contracts`);
+  return NextResponse.json<contractsResponse>({
+    contracts,
     totalPages: Math.ceil((count || 0) / pageSize),
     currentPage: page,
-    message: "Complaints fetched successfully",
+    message: "contracts fetched successfully",
     status: 200,
   });
 }

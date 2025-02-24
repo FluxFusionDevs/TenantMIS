@@ -78,7 +78,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
                 {formatDateTime(complaint.created_at!)}
               </span> */}
               <p className="opacity-50 mb-2">{complaint.status}</p>
-              <Link href={`/staffmanager/complaints/details/${complaint.complaint_id}`}>
+              <Link href={`/tenantmanager/complaints/details/${complaint.complaint_id}`}>
                 <Button className="bg-[#00000080] hover:bg-[#00000095] text-white" size="lg">
                   View
                 </Button>
