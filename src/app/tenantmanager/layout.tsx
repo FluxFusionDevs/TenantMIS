@@ -1,3 +1,5 @@
+"use client";
+
 import { AppSidebar } from "@/components/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Home, Users, ClipboardList, Settings, FileText, ShoppingCart } from "lucide-react";
@@ -20,27 +22,27 @@ export default async function ManagerLayout({
   const managerItems: MenuItem[] = [
     {
       title: "Dashboard",
-      url: `/tenantmanager/${managerId}/dashboard`,
+      url: `/tenantmanager/dashboard`,
       icon: Home,
     },
     {
       title: "Tenants",
-      url: `/tenantmanager/${managerId}/tenants`,
+      url: `/tenantmanager/tenants`,
       icon: Users,
     },
     {
       title: "Contracts",
-      url: `/tenantmanager/${managerId}/contracts`,
+      url: `/tenantmanager/contracts`,
       icon: ClipboardList,
     },
     {
       title: "Complaints",
-      url: `/tenantmanager/${managerId}/complaints`,
+      url: `/tenantmanager/complaints`,
       icon: FileText,
     },
     {
       title: "Purchase",
-      url: `/tenantmanager/${managerId}/purchase`,
+      url: `/tenantmanager/purchase`,
       icon: ShoppingCart,
     },
   ];

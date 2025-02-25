@@ -1,82 +1,116 @@
-'use client'
+"use server";
 
-import { MultiCard } from '@/components/multi-card'
-import Image from 'next/image'
-import React from 'react'
-import { Bell, Filter } from 'lucide-react'
+import { MultiCard } from "@/components/multi-card";
+import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabaseServer";
+import logger from "@/logger/logger";
+import { Contracts } from "@/models/contracts";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
-// Dummy user data
-const user = {
-  name: "Name",
-  role: "Manager",
-};
+import { FileIcon, FilterIcon, Plus, PlusCircleIcon } from "lucide-react";
+import Image from "next/image";
+import { PaginationControls } from "@/components/pagination";
+import { formatDateTime, isImageFile } from "@/app/utils";
+import Link from "next/link";
+import { Search } from "../ui/searchComplaint";
 
-const cardData = [
-  {
-    id: "1",
-    title: 'John Smith 3-Month Lease',
-    description: "ID#2190",
-    content: (
-      <div>
-        <p>Starts:</p>
-        <p>Expires:</p>
-      </div>
-    ),
-  },
-  {
-    id: "2",
-    title: 'Jane Madison Neo',
-    description: "ID#1154",
-    content: (
-      <div>
-        <p>Starts:</p>
-        <p>Expires:</p>
-      </div>
-    ),
-  },
-  {
-    id: "3",
-    title: 'James Manginiban',
-    description: "ID#1678",
-    content: (
-      <div>
-        <p>Starts:</p>
-        <p>Expires:</p>
-      </div>
-    ),
-  },
-];
+export default async function Page({ searchParams }: { searchParams: any }) {
+  const client = await createClient();
+  const tenantId = (await client.auth.getUser()).data.user!.id;
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const params = await searchParams;
+  const currentPage = Number(await params.page) || 1;
 
-const UserProfile = () => (
-  <div className="flex items-center space-x-3">
-    <Bell className="w-6 h-6 text-gray-500" />
-    <div className="text-right">
-      <p className="text-sm text-gray-700">
-        Welcome, <span className="font-semibold">{user.name}</span>
-      </p>
-      <p className="text-xs text-gray-500">{user.role}</p>
-    </div>
-    <Image src="/path-to-user-image.jpg" alt="User Avatar" width={32} height={32} className="rounded-full" />
-  </div>
-);
+  const res = await fetch(
+    `${baseUrl}/tenantmanager/api/getContract`,
+    { cache: "no-store" }
+  );
+  
+  const data = await res.json();
+  const contracts: Contracts[] = data.contracts;
 
-export default function Dashboard() {
+  if (!Array.isArray(contracts)) {
+    logger.error(`contracts is not an array`);
+    return null;
+  }
+    const cardData = contracts.map((contract) => {
+      const renderAttachment = () => {
+        // Early return if attachments is undefined
+        if (!contract.contract_attachments) {
+          return (
+            <div className="w-[180px] h-[180px] bg-gray-100 flex items-center justify-center aspect-square">
+              <FileIcon className="w-16 h-16 text-gray-400" />
+            </div>
+          );
+        }
+    
+        const hasAttachments = contract.contract_attachments.length > 0;
+        
+        // Check for attachments and valid image file
+        if (!hasAttachments || !isImageFile(contract.contract_attachments[0]?.file_type)) {
+          return (
+            <div className="w-[180px] h-[180px] bg-gray-100 flex items-center justify-center aspect-square">
+              <FileIcon className="w-16 h-16 text-gray-400" />
+            </div>
+          );
+        }
+    
+        return (
+          <Image
+            src={contract.contract_attachments[0].file_url}
+            alt="Request Image"
+            width={180}
+            height={180}
+            className="aspect-square object-cover"
+            loading="lazy"
+          />
+        );
+      };
+  
+      return {
+        id: contract.contract_id,
+        content: (
+          <div className="flex items-start justify-start">
+            {renderAttachment()}
+            <div className="mx-8">
+              <p className="font-bold text-2xl opacity-80">{contract.tenant_id}</p>
+              {/* <span className="text-sm opacity-75">
+                {formatDateTime(contract.created_at!)}
+              </span> */}
+              <p className="opacity-50 mb-2">{contract.contract_status}</p>
+              <Link href={`/staffmanager/contracts/details/${contract.contract_id}`}>
+                <Button className="bg-[#00000080] hover:bg-[#00000095] text-white" size="lg">
+                  View
+                </Button>
+              </Link>
+            </div>
+          </div>
+        ),
+      };
+    });
+  
+
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Contract Monitoring</h1>
-        <UserProfile />
+    <div className="space-y-4">
+      <h1 className="text-3xl font-bold opacity-80">Request Page</h1>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4 flex-grow mr-2">
+          <Search
+            placeholder="Search request..."
+          />
+          <Button>
+            <FilterIcon size={20} />
+            </Button>
+        </div>
+       
       </div>
 
-      {/* Search & Filter */}
-      <div className="flex items-center space-x-3">
-        <Filter className="w-5 h-5 text-gray-600" />
-        <input type="text" placeholder="Search" className="border p-2 rounded-md w-64" />
-      </div>
-
-      {/* Cards */}
-      <MultiCard data={cardData} direction="column" />
+      <MultiCard padding="md" data={cardData} direction="column" />
+      <PaginationControls
+        currentPage={currentPage}
+        totalPages={data.totalPages}
+        redirectPath="/tenantmanager/contracts"
+      />
     </div>
   );
 }

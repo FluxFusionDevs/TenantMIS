@@ -32,6 +32,8 @@ const Router: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           redirect(RoleRoutes.FINANCEMANAGER);
         } else if (role === "STAFFMANAGER") {
           redirect(RoleRoutes.STAFFMANAGER);
+        } else if (role === "TENANTMANAGER") {
+          redirect(RoleRoutes.TENANTMANAGER);
         } else {
           redirect("/auth/login");
         }

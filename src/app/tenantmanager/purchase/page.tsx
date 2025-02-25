@@ -1,4 +1,4 @@
-'use client'
+'use server'
 
 import React from 'react'
 import { Bell, Filter, Plus } from 'lucide-react'
@@ -53,7 +53,7 @@ const UserProfile = () => (
   </div>
 )
 
-export default function PurchaseOrdersPage() {
+export default async function PurchaseOrdersPage() {
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
