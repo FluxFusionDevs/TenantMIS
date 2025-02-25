@@ -78,7 +78,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
                 {formatDateTime(contract.created_at!)}
               </span> */}
               <p className="opacity-50 mb-2">{contract.contract_status}</p>
-              <Link href={`/staffmanager/contracts/details/${contract.contract_id}`}>
+              <Link href={`/tenantmanager/contracts/details/${contract.contract_id}`}>
                 <Button className="bg-[#00000080] hover:bg-[#00000095] text-white" size="lg">
                   View
                 </Button>

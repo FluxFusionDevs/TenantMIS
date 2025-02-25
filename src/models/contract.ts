@@ -1,12 +1,12 @@
 
 export interface Contract {
-    contract_id: number;
+    contract_id?: string;
     tenant_id: number;
     contract_start: string;
     contract_end: string;
     contract_status: string;
     rent_price: number;
-    contract_attachments: ContractAttachment[];
+    contract_attachments?: ContractAttachment[];
 }
 
 
