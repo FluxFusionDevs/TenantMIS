@@ -1,6 +1,6 @@
 
 export interface Contract {
-    contract_id: string;
+    contract_id?: string;
     tenant_id: number;
     contract_start: string;
     contract_end: string;
