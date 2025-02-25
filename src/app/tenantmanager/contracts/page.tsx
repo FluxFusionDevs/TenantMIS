@@ -92,7 +92,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-3xl font-bold opacity-80">Request Page</h1>
+      <h1 className="text-3xl font-bold opacity-80">Contract Page</h1>
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4 flex-grow mr-2">
           <Search
