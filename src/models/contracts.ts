@@ -1,11 +1,11 @@
 export interface Contracts {
-  contract_id?: string;
+  contract_id: string;
   tenant_id: string;
   contract_start: string;
   contract_ends: string;
   contract_status: Status;
   contract_price: number;
-  contract_attachments?: ContractAttachment[];
+  contract_attachments: ContractAttachment[];
 }
 
 export interface ContractAttachment {
