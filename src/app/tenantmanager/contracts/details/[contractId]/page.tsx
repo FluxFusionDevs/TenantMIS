@@ -2,7 +2,7 @@ import { formatDateTime, isImageFile } from "@/app/utils";
 import { BackButton } from "@/components/back-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabaseServer";
-import { Contracts, ContractAttachment, Status } from "@/models/contracts";
+import { Contract, ContractAttachment, ContractStatus } from "@/models/contract";
 import { FileIcon } from "lucide-react";
 import Image from "next/image";
 
@@ -24,7 +24,7 @@ export default async function Page({ params }: { params: any }) {
     }
 
     const data = await res.json();
-    const contracts: Contracts | undefined = data.contracts;
+    const contracts: Contract | undefined = data.contracts;
 
     if (!contracts) {
       return <div>Error: Contract data not found</div>;
@@ -102,13 +102,13 @@ export default async function Page({ params }: { params: any }) {
               Status: {contracts.contract_status}
             </p>
             <p className="text-base md:text-lg break-words whitespace-pre-wrap">
-              Price: ${contracts.contract_price?.toFixed(2)}
+              Price: ${contracts.rent_price?.toFixed(2)}
             </p>
             <p className="text-base md:text-lg truncate">
               Start Date: {contracts.contract_start ? formatDateTime(contracts.contract_start) : "N/A"}
             </p>
             <p className="text-base md:text-lg truncate">
-              End Date: {contracts.contract_ends ? formatDateTime(contracts.contract_ends) : "N/A"}
+              End Date: {contracts.rent_price ? formatDateTime(contracts.contract_end) : "N/A"}
             </p>
           </CardContent>
         </Card>
