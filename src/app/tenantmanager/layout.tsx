@@ -1,8 +1,10 @@
 "use client";
 
+import ChatBotComponent from "@/components/chatbotfaq";
 import { AppSidebar } from "@/components/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Home, Users, ClipboardList, Settings, FileText, ShoppingCart } from "lucide-react";
+import { tenantManagerFaqs } from "./constants/faqs";
 
 interface MenuItem {
   title: string;
@@ -54,6 +56,7 @@ export default async function ManagerLayout({
         <main className="mx-10 w-full">
           <SidebarTrigger />
           <div>{children}</div>
+          <ChatBotComponent flow={tenantManagerFaqs} />
         </main>
       </SidebarProvider>
     </div>

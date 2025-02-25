@@ -6,6 +6,7 @@ export interface Contract {
     contract_end: string;
     contract_status: string;
     rent_price: number;
+    contract_attachments: ContractAttachment[];
 }
 
 

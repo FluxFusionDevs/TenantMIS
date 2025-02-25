@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card"
 
 type CardData = {
-  id?: string
+  id?: string | number  
   title?: string | React.ReactNode
   description?: string | React.ReactNode
   content?: React.ReactNode
