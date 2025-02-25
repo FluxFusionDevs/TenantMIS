@@ -13,7 +13,7 @@ export default async function Page({ params }: { params: any }) {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const { requestId } = await params;
   const res = await fetch(
-    `${baseUrl}/tenant/request/getRequest?tenantId=${tenantId}&requestId=${requestId}`
+    `${baseUrl}/tenant/request/api/getRequest?tenantId=${tenantId}&requestId=${requestId}`
   );
   const data = await res.json();
   const complaint: Complaint = data.complaint;

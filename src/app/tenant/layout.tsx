@@ -15,6 +15,9 @@ import { constants } from "node:buffer";
 import React, { Suspense, Usable } from "react";
 import { MenuItem } from "@/models/sidebar-menu";
 import Loading from "@/components/loading";
+import ChatBot from "react-chatbotify";
+import { tenantFaqs } from "./constants/faq";
+import ChatBotComponent from "@/components/chatbotfaq";
 
 type Params = {
   userId: string;
@@ -27,6 +30,7 @@ export default function HomeLayout({
   params: Usable<Params>;
 }) {
   const signOut = async () => {
+    const supabase = createClient();
     await supabase.auth.signOut();
   };
 
@@ -51,11 +55,15 @@ export default function HomeLayout({
       url: `/tenant/billing`,
       icon: Receipt,
     },
-    {
-      title: "FAQ",
-      url: "#",
-      icon: MessageCircle,
-    },
+    // {
+    //   title: "FAQ",
+    //   url: `/tenant/faqs`,
+    //   icon: MessageCircle,
+    // },
+    
+  ];
+
+  const otherItems: MenuItem[] = [
     {
       title: "Logout",
       action: signOut,
@@ -66,10 +74,11 @@ export default function HomeLayout({
   return (
     <div>
       <SidebarProvider>
-        <AppSidebar menuItems={tenantItems} />
+        <AppSidebar menuItems={tenantItems} otherItems={otherItems} />
         <main className="mx-2 md:mx-2 lg:mx-6 xl:mx-10 w-full">
           <SidebarTrigger />
           <div>{children}</div>
+          <ChatBotComponent flow={tenantFaqs} />
         </main>
       </SidebarProvider>
     </div>

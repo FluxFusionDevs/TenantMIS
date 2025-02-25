@@ -24,7 +24,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
   const currentPage = Number(await params.page) || 1;
 
   const res = await fetch(
-    `${baseUrl}/tenant/request/getRequests?tenantId=${tenantId}&page=${currentPage}`
+    `${baseUrl}/tenant/request/api/getRequests?tenantId=${tenantId}&page=${currentPage}`
   );
   
   const data = await res.json();

@@ -18,6 +18,9 @@ import {
 import { constants } from "node:buffer";
 import React, { Usable } from "react";
 import { MenuItem } from "@/models/sidebar-menu";
+import ChatBot from "react-chatbotify";
+import { staffManagerFaqs } from "./constants/faqs";
+import ChatBotComponent from "@/components/chatbotfaq";
 
 type Params = {
   userId: string;
@@ -82,6 +85,7 @@ export default function HomeLayout({
         <main className="mx-2 md:mx-2 lg:mx-6 xl:mx-10 w-full">
           <SidebarTrigger />
           <div>{children}</div>
+          <ChatBotComponent flow={staffManagerFaqs} />
         </main>
       </SidebarProvider>
     </div>

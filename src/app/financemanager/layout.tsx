@@ -16,6 +16,9 @@ import {
 import React, { Usable } from "react";
 import { MenuItem } from "@/models/sidebar-menu";
 import { createClient } from "@/lib/supabaseClient";
+import ChatBot from "react-chatbotify";
+import { financeManagerFaqs } from "./constants/faqs";
+import ChatBotComponent from "@/components/chatbotfaq";
 
 type Params = {
   userId: string;
@@ -62,6 +65,7 @@ export default function HomeLayout({
         <main className="mx-2 md:mx-2 lg:mx-6 xl:mx-10 w-full">
           <SidebarTrigger />
           <div>{children}</div>
+          <ChatBotComponent flow={financeManagerFaqs} />
         </main>
       </SidebarProvider>
     </div>
