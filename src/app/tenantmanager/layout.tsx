@@ -3,20 +3,35 @@
 import ChatBotComponent from "@/components/chatbotfaq";
 import { AppSidebar } from "@/components/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Home, Users, ClipboardList, Settings, FileText, ShoppingCart } from "lucide-react";
+import { createClient } from "@/lib/supabaseClient";
+import {
+  Home,
+  Users,
+  ClipboardList,
+  Settings,
+  FileText,
+  ShoppingCart,
+  LogOut,
+} from "lucide-react";
 import { tenantManagerFaqs } from "./constants/faqs";
 
 interface MenuItem {
   title: string;
-  url: string;
+  url?: string;
   icon: React.ComponentType;
+  action?: () => void;
 }
 
-export default async function ManagerLayout({
+export default function ManagerLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = createClient();
+  
+  const signOut = async () => {
+    await supabase.auth.signOut();
+  };
 
   const managerItems: MenuItem[] = [
     {
@@ -43,6 +58,11 @@ export default async function ManagerLayout({
       title: "Purchase",
       url: `/tenantmanager/purchase`,
       icon: ShoppingCart,
+    },
+    {
+      title: "Logout",
+      action: signOut,
+      icon: LogOut,
     },
   ];
 

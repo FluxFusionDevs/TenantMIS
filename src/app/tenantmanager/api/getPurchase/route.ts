@@ -1,55 +1,54 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabaseServer";
 import logger from "@/logger/logger";
+import { Purchase } from "@/models/purchase";
 
-interface ComplaintsResponse {
-  complaints: any;
+interface StaffResponse {
+  purchase: Purchase[];
   message: string;
   status: number;
+  totalPages: number;
+  currentPage: number;
 }
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const role = searchParams.get("role");
-  const staffId = searchParams.get("staffId");
+  const searchQuery = searchParams.get("search");
+  const page = parseInt(searchParams.get("page") || "1");
+  const pageSize = 15;
+  const start = (page - 1) * pageSize;
+  const end = start + pageSize - 1;
   const supabase = await createClient();
-let query = supabase
-  .from("staff_tasks")
-  .select(`
-    task_id,
-    staff_id,
-    status,
-    complaints!inner (
-      *,
-      complaints_attachments (
-        attachment_id,
-        file_name,
-        file_type,
-        file_size,
-        file_url,
-        uploaded_at
-      )
+  let query = supabase
+    .from("purchase_orders")
+    .select(
+      `
+    *
+  `,
+      { count: "exact" }
     )
-  `, { count: "exact" })
-  .eq("staff_id", staffId)
-  .eq("complaints.category", role)
-  .order('task_id', { ascending: false })
-  .limit(5);
+    .range(start, end);
 
-  const { data: complaints, error: complaintsError, count } = await query;
+  if (searchQuery) {
+    query = query.or(`name.ilike.%${searchQuery}%`);
+  }
 
-  if (complaintsError) {
-    logger.error(`Complaints Error: ${complaintsError.message}`);
+  const { data: purchase, error: purchaseError, count } = await query;
+  
+
+  if (purchaseError) {
+    logger.error(`Staffs Error: ${purchaseError.message}`);
     return NextResponse.json({
-      message: "Error fetching complaints",
-      status: complaintsError.code,
+      message: "Error fetching purchase",
+      status: purchaseError.code,
     });
   }
 
-  logger.info(`Successfully fetched complaints for role ${role}`);
-  return NextResponse.json<ComplaintsResponse>({
-    complaints,
-    message: "Complaints fetched successfully",
+  return NextResponse.json<StaffResponse>({
+    purchase: purchase,
+    totalPages: Math.ceil((count || 0) / pageSize),
+    currentPage: page,
+    message: "Successfully fetched purchase",
     status: 200,
   });
 }
