@@ -13,7 +13,6 @@ interface StaffResponse {
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const role = searchParams.get("role");
   const searchQuery = searchParams.get("search");
   const page = parseInt(searchParams.get("page") || "1");
   const pageSize = 15;
@@ -30,9 +29,6 @@ export async function GET(req: NextRequest) {
     )
     .range(start, end);
 
-  if (role) {
-    query = query.eq("role", role);
-  }
   if (searchQuery) {
     query = query.or(`name.ilike.%${searchQuery}%`);
   }
