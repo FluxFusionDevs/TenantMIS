@@ -6,6 +6,7 @@ import logger from "@/logger/logger";
 import { revalidatePath } from "next/cache";
 
 type FormState = {
+  [x: string]: any;
   success: boolean;
   messages?: string[];
 };
