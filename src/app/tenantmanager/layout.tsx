@@ -14,12 +14,9 @@ interface MenuItem {
 
 export default async function ManagerLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: { managerId: string };
 }) {
-  const { managerId } = await params; // Correctly destructure params without `await`
 
   const managerItems: MenuItem[] = [
     {
