@@ -3,6 +3,7 @@
 import { StaffWithShifts } from "@/models/staff";
 import { Edit } from "lucide-react";
 import Image from "next/image";
+import imageCompression from "browser-image-compression";
 
 interface ProfilePicProps {
   staff: StaffWithShifts;
@@ -10,13 +11,40 @@ interface ProfilePicProps {
 }
 
 export default function ProfilePic({ staff, onUpdateImage }: ProfilePicProps) {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    try {
+      // Compression options
+      const options = {
+        maxSizeMB: 0.5, // Target size in MB
+        maxWidthOrHeight: 800, // Resize to 800px max width/height
+        useWebWorker: true,
+      };
+
+      const compressedFile = await imageCompression(file, options);
+
+      // Prepare FormData for upload
+      const formData = new FormData();
+      if (!staff.staff_id) return;
+      formData.append("staffId", staff.staff_id);
+      formData.append("picture", compressedFile);
+
+      await onUpdateImage(formData);
+    } catch (error) {
+      console.error("Compression failed:", error);
+    }
+  };
+
   return (
-    <form action={onUpdateImage}>
+    <form>
       <input type="hidden" name="staffId" value={staff.staff_id} />
       <div 
         className="w-48 h-48 rounded-full overflow-hidden relative group cursor-pointer"
         onClick={() => {
-          const fileInput = document.querySelector(`input[name="picture"`) as HTMLInputElement;
+          const fileInput = document.getElementById(`file-upload-${staff.staff_id}`) as HTMLInputElement;
           fileInput?.click();
         }}
       >
@@ -32,15 +60,11 @@ export default function ProfilePic({ staff, onUpdateImage }: ProfilePicProps) {
         </div>
       </div>
       <input
+        id={`file-upload-${staff.staff_id}`}
         type="file"
-        name={`picture`}
         accept="image/*"
         className="hidden"
-        onChange={(e) => {
-          if (e.target.files?.[0]) {
-            e.target.form?.requestSubmit();
-          }
-        }}
+        onChange={handleFileChange}
       />
     </form>
   );
