@@ -105,7 +105,7 @@ export async function onUpdateStaff(
     logger.info(`Staff ${data.staff_id} updated successfully`);
   }
 
-  revalidatePath("/staffmanager/security");
+  revalidatePath("/");
   return result;
 }
 
@@ -141,7 +141,7 @@ export async function updateProfileImage(formData: FormData) {
       throw error;
     }
 
-    revalidatePath("/staffmanager/security/details/[staffId]");
+    revalidatePath(`/`);
   } catch (error) {
     logger.error(`Error updating profile image: ${error}`);
   }

@@ -20,8 +20,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Status, Priority, Category, Complaint } from "@/models/complaint";
-import { useActionState, useEffect, useState } from "react";
+import { Status, Priority, Category } from "@/models/complaint";
+import { useActionState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { MultipleFileUploads } from "@/components/multi-fileuploads";
 import { Loader2 } from "lucide-react";

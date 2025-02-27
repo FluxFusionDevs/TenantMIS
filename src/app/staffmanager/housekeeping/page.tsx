@@ -3,23 +3,20 @@
 import { MultiCard } from "@/components/multi-card";
 import { createClient } from "@/lib/supabaseServer";
 import { StaffCategory, StaffWithShifts } from "@/models/staff";
-import {
-  FilterIcon,
-  MailIcon,
-  PhoneIcon,
-  Plus,
-} from "lucide-react";
+import { FilterIcon, MailIcon, PhoneIcon, Plus } from "lucide-react";
 import Image from "next/image";
 import { Search } from "../ui/searchStaff";
-import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { StaffForm } from "../ui/addStaffForm";
 import { Button } from "@/components/ui/button";
 import { PaginationControls } from "@/components/pagination";
 import Link from "next/link";
+import { Avatar } from "@/components/ui/avatar";
+import { AvatarImage } from "@radix-ui/react-avatar";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 export default async function Page({ searchParams }: { searchParams: any }) {
   const client = await createClient();
-  const userId = (await client.auth.getUser()).data.user!.id
+  const userId = (await client.auth.getUser()).data.user!.id;
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const params = await searchParams;
   const currentPage = Number(await params.page) || 1;
@@ -31,14 +28,13 @@ export default async function Page({ searchParams }: { searchParams: any }) {
   const data = await res.json();
   const staffs: StaffWithShifts[] = data.staffs;
 
-
   const cardData = staffs.map((staff) => {
     return {
       id: staff.staff_id,
       title: (
         <div className="flex justify-between">
           <Link href={`/staffmanager/housekeeping/details/${staff.staff_id}`}>
-          <h1 className="text-2xl font-bold underline">{staff.name}</h1>
+            <h1 className="text-2xl font-bold underline">{staff.name}</h1>
           </Link>
           <div className="flex items-center space-x-4">
             <PhoneIcon size={40} className="cursor-pointer" />
@@ -55,19 +51,14 @@ export default async function Page({ searchParams }: { searchParams: any }) {
       ),
       content: (
         <div className="flex items-center space-x-4">
-          <Image
-            src={
-              staff.picture ||
-              "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Crect width='50' height='50' fill='%23E5E7EB'/%3E%3C/svg%3E"
-            }
-            alt="Staff Image"
-            width={50}
-            height={50}
-            className="rounded-full"
-          />
-          <div>
-            <p>UID# {staff.staff_id}</p>
-          </div>
+          <Avatar>
+            <AvatarImage
+                  className="w-10 h-10 object-cover"
+              src={staff.picture || "/profile_placeholder.png"}
+            />
+          </Avatar>
+
+          <p>UID# {staff.staff_id}</p>
         </div>
       ),
     };

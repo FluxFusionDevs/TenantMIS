@@ -22,9 +22,11 @@ export default async function Page({ searchParams }: { searchParams: any }) {
   const currentPage = Number(await params.page) || 1;
 
   const res = await fetch(
-    `${baseUrl}/tenantmanager/api/getComplaint`,
-    { cache: "no-store" }
-  );
+    `${baseUrl}/tenantmanager/api/getComplaint`,{
+      next: {
+        revalidate: 20,
+      }
+    });
   
   const data = await res.json();
   const complaints: Complaint[] = data.complaints;

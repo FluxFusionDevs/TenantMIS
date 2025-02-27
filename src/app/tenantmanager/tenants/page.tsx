@@ -10,7 +10,11 @@ const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
 async function fetchTenants(): Promise<Tenant[]> {
   try {
-    const res = await fetch(`${baseUrl}/tenantmanager/api/getTenant`, { cache: "no-store" });
+    const res = await fetch(`${baseUrl}/tenantmanager/api/getTenant`, {
+      next: {
+        revalidate: 60,
+      },
+    });
     if (!res.ok) throw new Error(`Failed to fetch tenants: ${res.statusText}`);
     
     const data = await res.json();

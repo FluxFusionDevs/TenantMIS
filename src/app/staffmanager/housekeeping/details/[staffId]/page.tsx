@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabaseServer";
 import { StaffWithShifts } from "@/models/staff";
 import { Task } from "@/models/task";
-import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import {
   FileIcon,
   Mail,
@@ -15,6 +14,7 @@ import Image from "next/image";
 import { EditStaffForm } from "../../../ui/editStaffForm";
 import ProfilePic from "@/components/profile-pic";
 import { updateProfileImage } from "../../../actions/onupdatestaff";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 export default async function Page({ params }: { params: any }) {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;

@@ -3,19 +3,15 @@
 import { MultiCard } from "@/components/multi-card";
 import { createClient } from "@/lib/supabaseServer";
 import { Staff, StaffCategory } from "@/models/staff";
-import {
-  FilterIcon,
-  MailIcon,
-  PhoneIcon,
-  Plus,
-} from "lucide-react";
+import { FilterIcon, MailIcon, PhoneIcon, Plus } from "lucide-react";
 import Image from "next/image";
 import { Search } from "../ui/searchStaff";
-import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { StaffForm } from "../ui/addStaffForm";
 import { Button } from "@/components/ui/button";
 import { PaginationControls } from "@/components/pagination";
 import Link from "next/link";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 export default async function Page({ searchParams }: { searchParams: any }) {
   const client = await createClient();
@@ -37,7 +33,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
       title: (
         <div className="flex justify-between">
           <Link href={`/staffmanager/technician/details/${staff.staff_id}`}>
-          <h1 className="text-2xl font-bold underline">{staff.name}</h1>
+            <h1 className="text-2xl font-bold underline">{staff.name}</h1>
           </Link>
           <div className="flex items-center space-x-4">
             <PhoneIcon size={40} className="cursor-pointer" />
@@ -54,16 +50,12 @@ export default async function Page({ searchParams }: { searchParams: any }) {
       ),
       content: (
         <div className="flex items-center space-x-4">
-          <Image
-            src={
-              staff.picture ||
-              "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Crect width='50' height='50' fill='%23E5E7EB'/%3E%3C/svg%3E"
-            }
-            alt="Staff Image"
-            width={50}
-            height={50}
-            className="rounded-full"
-          />
+          <Avatar>
+            <AvatarImage
+                  className="w-10 h-10 object-cover"
+                  src={staff.picture || "/profile_placeholder.png"}
+            />
+          </Avatar>
           <div>
             <p>UID# {staff.staff_id}</p>
           </div>
@@ -74,7 +66,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-3xl font-bold opacity-80">Technician Management</h1>
+      <p className="text-3xl font-bold opacity-80">Technician Management</p>
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4 flex-grow mr-2">
           <Search

@@ -9,7 +9,11 @@ const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 async function fetchPurchases(): Promise<Purchase[]> {
   try {
-    const res = await fetch(`${baseUrl}/tenantmanager/api/getPurchase`, { cache: "no-store" });
+    const res = await fetch(`${baseUrl}/tenantmanager/api/getPurchase`, {
+      next: {
+        revalidate: 60,
+      }
+    });
     if (!res.ok) throw new Error(`Failed to fetch purchases: ${res.statusText}`);
     const data = await res.json();
     return data.purchase || [];
@@ -19,7 +23,7 @@ async function fetchPurchases(): Promise<Purchase[]> {
   }
 }
 
-export default async function PurchaseOrdersPage() {
+export default async function Page() {
   const purchases = await fetchPurchases();
 
   const purchaseCards = purchases.map((order: Purchase) => ({

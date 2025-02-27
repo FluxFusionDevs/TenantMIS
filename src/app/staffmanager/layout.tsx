@@ -27,10 +27,8 @@ type Params = {
 };
 export default function HomeLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: Usable<Params>;
 }) {
   const supabase = createClient();
   const signOut = async () => {

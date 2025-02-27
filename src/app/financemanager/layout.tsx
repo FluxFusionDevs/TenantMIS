@@ -3,32 +3,21 @@
 import { AppSidebar } from "@/components/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import {
-  Home,
-  Inbox,
-  Paperclip,
-  Receipt,
-  MessageCircle,
   LogOut,
   LayoutDashboard,
   Newspaper,
   ScrollText,
 } from "lucide-react";
-import React, { Usable } from "react";
+import React from "react";
 import { MenuItem } from "@/models/sidebar-menu";
 import { createClient } from "@/lib/supabaseClient";
-import ChatBot from "react-chatbotify";
 import { financeManagerFaqs } from "./constants/faqs";
 import ChatBotComponent from "@/components/chatbotfaq";
 
-type Params = {
-  userId: string;
-};
 export default function HomeLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: Usable<Params>;
 }) {
   const signOut = async () => {
     const supabase = createClient();

@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { useActionState, useEffect, useState } from "react";
 import { Loader2, Minus } from "lucide-react";
-import { onSubmitStaff } from "../actions/onsubmitstaff";
+import { onSubmitStaff } from "../actions/onsubmittenant";
 import {
   DayOfWeek,
   StaffCategory,
@@ -67,7 +67,7 @@ export function StaffForm({ userId, role  }: { userId: string, role: StaffCatego
   const [shifts, setShifts] = useState<StaffShift[]>([
     {
       shift_id: 1,
-      staff_id: 0,
+      staff_id: "",
       day_of_week: "" as DayOfWeek,
       shift_start: "",
       shift_end: "",
@@ -92,7 +92,7 @@ export function StaffForm({ userId, role  }: { userId: string, role: StaffCatego
       ...shifts,
       {
         shift_id: newId,
-        staff_id: 0,
+        staff_id: "",
         day_of_week: "" as DayOfWeek,
         shift_start: "",
         shift_end: "",
@@ -233,7 +233,7 @@ export function StaffForm({ userId, role  }: { userId: string, role: StaffCatego
                 {" "}
                 <Select
                   value={shift.day_of_week}
-                  onValueChange={(value) =>
+                  onValueChange={(value: string) =>
                     handleShiftChange(shift.shift_id, "day_of_week", value)
                   }
                 >

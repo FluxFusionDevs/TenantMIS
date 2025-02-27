@@ -8,16 +8,14 @@ import {
   MailIcon,
   PhoneIcon,
   Plus,
-  PlusCircleIcon,
 } from "lucide-react";
-import Image from "next/image";
 import { Search } from "../ui/searchStaff";
-import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { StaffForm } from "../ui/addStaffForm";
 import { Button } from "@/components/ui/button";
 import { PaginationControls } from "@/components/pagination";
 import Link from "next/link";
-import { cli } from "winston/lib/winston/config";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 export default async function Page({ searchParams }: { searchParams: any }) {
   const client = await createClient();
@@ -56,16 +54,12 @@ export default async function Page({ searchParams }: { searchParams: any }) {
       ),
       content: (
         <div className="flex items-center space-x-4">
-          <Image
-            src={
-              staff.picture ||
-              "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Crect width='50' height='50' fill='%23E5E7EB'/%3E%3C/svg%3E"
-            }
-            alt="Staff Image"
-            width={50}
-            height={50}
-            className="rounded-full"
-          />
+            <Avatar>
+            <AvatarImage
+                  className="w-10 h-10 object-cover"
+                  src={staff.picture || "/profile_placeholder.png"}
+            />
+          </Avatar>
           <div>
             <p>UID# {staff.staff_id}</p>
           </div>
@@ -87,7 +81,6 @@ export default async function Page({ searchParams }: { searchParams: any }) {
             <FilterIcon size={20} />
           </Button>
         </div>
-        <StaffForm userId={userId} role={StaffCategory.SECURITY} />
 
         <Dialog>
           <DialogTrigger asChild>
@@ -95,6 +88,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
               <Plus size={20} />
             </Button>
           </DialogTrigger>
+          <StaffForm userId={userId} role={StaffCategory.SECURITY} />
         </Dialog>
       </div>
       <MultiCard padding="md" data={cardData} direction="row" />

@@ -29,9 +29,7 @@ import {
   StaffStatus,
 } from "@/models/staff";
 import { TimePicker } from "@/components/timePicker";
-import { useSession } from "@/app/context/SupabaseSessionContext";
-import { jwtDecode } from "jwt-decode";
-import { CustomJwtPayload } from "@/models/jwt";
+
 type FormState = {
   success: boolean;
   messages?: string[];
@@ -67,7 +65,7 @@ export function StaffForm({ userId, role  }: { userId: string, role: StaffCatego
   const [shifts, setShifts] = useState<StaffShift[]>([
     {
       shift_id: 1,
-      staff_id: 0,
+      staff_id: "",
       day_of_week: "" as DayOfWeek,
       shift_start: "",
       shift_end: "",
@@ -92,7 +90,7 @@ export function StaffForm({ userId, role  }: { userId: string, role: StaffCatego
       ...shifts,
       {
         shift_id: newId,
-        staff_id: 0,
+        staff_id: "",
         day_of_week: "" as DayOfWeek,
         shift_start: "",
         shift_end: "",
