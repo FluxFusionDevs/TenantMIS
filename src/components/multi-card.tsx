@@ -24,20 +24,29 @@ const paddingSizes = {
   xl: "p-10",
 };
 
+const sizes = {
+  auto: "w-auto",
+  xs: "w-[100px]",
+  sm: "w-[200px]",
+  md: "w-[300px]",
+  lg: "w-[350px]",
+};
+
 type MultiCardProps = {
   data: CardData[]
   direction: "row" | "column"
   padding?: keyof typeof paddingSizes
-  className?: string
+  className?: string,
+  size?: keyof typeof sizes
 }
 
 
 
-export function MultiCard({ data, direction, padding = "md", className }: MultiCardProps) {
+export function MultiCard({ data, direction, padding = "md", className, size = "auto" }: MultiCardProps) {
   return (
-    <div className={`flex gap-4 ${direction === "row" ? "flex-row overflow-x-auto" : "flex-col"} ${className}`}>
+    <div className={`flex gap-4 ${direction === "row" ? "flex-row flex-wrap" : "flex-col"} ${className}`}>
       {data.map((item) => (
-        <Card key={item.id}>
+        <Card key={item.id} className={sizes[size]}>
           {item.title || item.description ? (
             <CardHeader>
               <CardTitle className="truncate">{item.title}</CardTitle>
