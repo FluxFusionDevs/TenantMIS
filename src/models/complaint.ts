@@ -29,17 +29,19 @@ export enum Priority {
   HIGH = "HIGH",
 }
 
-export enum Category {
-  MAINTENANCE = "MAINTENANCE",
-  HOUSEKEEPING = "HOUSEKEEPING",
-  SECURITY = "SECURITY",
-}
 
 export enum Status {
   PENDING = "PENDING",
   IN_PROGRESS = "IN PROGRESS",
   COMPLETED = "COMPLETED",
 }
+
+export enum Category {
+  MAINTENANCE = "MAINTENANCE",
+  HOUSEKEEPING = "HOUSEKEEPING",
+  SECURITY = "SECURITY",
+}
+
 
 export function validateCategory(category: string): Category {
   if (Object.values(Category).includes(category as Category)) {
@@ -60,4 +62,31 @@ export function validateStatus(status: string): Status {
     return status as Status;
   }
   throw new Error('Invalid status');
+}
+
+
+export function getPriorityColor(priority: Priority): string {
+  switch (priority) {
+    case Priority.LOW:
+      return "green";
+    case Priority.MODERATE:
+      return "orange";
+    case Priority.HIGH:
+      return "red";
+    default:
+      return "gray";
+  }
+}
+
+export function getStatusColor(status: Status): string {
+  switch (status) {
+    case Status.PENDING:
+      return "yellow";
+    case Status.IN_PROGRESS:
+      return "blue";
+    case Status.COMPLETED:
+      return "green";
+    default:
+      return "gray";
+  }
 }

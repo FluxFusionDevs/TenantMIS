@@ -1,8 +1,9 @@
 import { formatDateTime, isImageFile } from "@/app/utils";
 import { BackButton } from "@/components/back-button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabaseServer";
-import { Complaint } from "@/models/complaint";
+import { Complaint, getPriorityColor, getStatusColor } from "@/models/complaint";
 import { ArrowLeft, FileIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -87,9 +88,19 @@ export default async function Page({ params }: { params: any }) {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 p-4 md:p-6">
-          <p className="text-lg md:text-xl font-semibold truncate">
-            Status: {complaint.status}
-          </p>
+        <div className="flex flex-wrap gap-2">
+              <Badge
+                variant={"secondary"}
+                className={`text-${getStatusColor(
+                  complaint.status
+                )} bg-${getStatusColor(complaint.status)}-100`}
+              >
+                {complaint.status}
+              </Badge>
+              <Badge variant={"secondary"} className={`text-${getPriorityColor(complaint.priority)} bg-${getPriorityColor(complaint.priority)}-100`}>
+                {complaint.priority}
+              </Badge>
+            </div>
           <p className="text-base md:text-lg break-words whitespace-pre-wrap">
             Description: {complaint.description}
           </p>
