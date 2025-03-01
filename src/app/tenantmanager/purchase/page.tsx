@@ -4,6 +4,8 @@ import { MultiCard } from "@/components/multi-card";
 import { Plus, Bell, Filter } from "lucide-react";
 import Image from "next/image";
 import { Purchase } from "@/models/purchase";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
@@ -31,17 +33,24 @@ export default async function Page() {
     title: order.description,
     description: `Amount: $${order.amount}`,
     content: (
-      <span
-        className={`px-3 py-1 rounded-md text-sm ${
-          order.status === "PENDING"
-            ? "text-yellow-700 bg-yellow-100"
-            : order.status === "APPROVED"
-            ? "text-green-700 bg-green-100"
-            : "text-red-700 bg-red-100"
-        }`}
-      >
-        {order.status}
-      </span>
+      <div className="p-4 border rounded-lg shadow-sm flex flex-col items-center text-center">
+        <span
+          className={`block w-fit px-3 py-1 rounded-md text-sm mb-3 ${
+            order.status === "PENDING"
+              ? "text-yellow-700 bg-yellow-100"
+              : order.status === "APPROVED"
+              ? "text-green-700 bg-green-100"
+              : "text-red-700 bg-red-100"
+          }`}
+        >
+          {order.status}
+        </span>
+        <Link href={`/purchases/details/${order.po_id}`}>
+          <Button className="bg-[#00000080] hover:bg-[#00000095] text-white w-full" size="lg">
+            View
+          </Button>
+        </Link>
+      </div>
     ),
   }));
 
