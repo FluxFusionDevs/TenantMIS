@@ -1,3 +1,5 @@
+import { Task } from "./task";
+
 export enum StaffCategory {
   HOUSEKEEPING = "HOUSEKEEPING",
   MAINTENANCE = "MAINTENANCE",
@@ -21,7 +23,9 @@ export enum StaffStatus {
 
 export interface Staff {
   staff_id?: string;
+  user_id?: string;
   name: string;
+  password: string;
   role: StaffCategory;
   phone_number: string;
   email: string;
@@ -36,6 +40,18 @@ export interface StaffShift {
   shift_start: string; 
   shift_end: string;
 }
+
+export interface StaffWithTasks extends Staff {
+    staff_tasks?: {
+      task_id: string;
+      title: string;
+      priority: string;
+      staff_id: string;
+      status: string;
+      description: string;
+      deadline: string;
+    } | null;
+  };
 
 export interface StaffWithShifts extends Staff {
   staff_shifts: StaffShift[];
