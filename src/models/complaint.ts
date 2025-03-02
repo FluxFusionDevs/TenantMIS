@@ -1,3 +1,5 @@
+import { Staff } from "./staff";
+
 export interface Complaint {
   complaint_id?: string;
   tenant_id: string;
@@ -22,11 +24,15 @@ export interface ComplaintAttachment {
   uploaded_by: string;
 }
 
+export interface ComplaintWithStaffAssigned extends Complaint {
+  staff_assigned: Staff[]
+}
 
 export enum Priority {
   LOW = "LOW",
   MODERATE = "MODERATE",
   HIGH = "HIGH",
+  CRITICAL = "CRITICAL",
 }
 
 
@@ -43,25 +49,16 @@ export enum Category {
 }
 
 
-export function validateCategory(category: string): Category {
-  if (Object.values(Category).includes(category as Category)) {
-    return category as Category;
-  }
-  throw new Error('Invalid category');
+export function validateCategory(category: string): boolean {
+  return Object.values(Category).includes(category as Category);
 }
 
-export function validatePriority(priority: string): Priority {
-  if (Object.values(Priority).includes(priority as Priority)) {
-    return priority as Priority;
-  }
-  throw new Error('Invalid priority');
+export function validatePriority(priority: string): Priority | boolean {
+  return Object.values(Priority).includes(priority as Priority);
 }
 
-export function validateStatus(status: string): Status {
-  if (Object.values(Status).includes(status as Status)) {
-    return status as Status;
-  }
-  throw new Error('Invalid status');
+export function validateStatus(status: string): boolean {
+  return Object.values(Status).includes(status as Status);
 }
 
 
@@ -73,6 +70,8 @@ export function getPriorityColor(priority: Priority): string {
       return "orange";
     case Priority.HIGH:
       return "red";
+    case Priority.CRITICAL:
+      return "purple";
     default:
       return "gray";
   }
