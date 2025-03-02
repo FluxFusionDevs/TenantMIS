@@ -41,17 +41,17 @@ export default function ManagerLayout({
     },
     {
       title: "Procurement Requests",
-      url: `/procurementmanager/tenants`,
+      url: `/procurementmanager/procrequests`,
       icon: Users,
     },
     {
       title: "Workflow Status",
-      url: `/procurementmanager/contracts`,
+      url: `/procurementmanager/workstatus`,
       icon: ClipboardList,
     },
     {
       title: "Approval",
-      url: `/procurementmanager/complaints`,
+      url: `/procurementmanager/approval`,
       icon: FileText,
     },
     {
