@@ -11,15 +11,7 @@ interface StaffResponse {
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const role = searchParams.get("role");
   const complaintId = searchParams.get("complaintId");
-
-  if (!role) {
-    return NextResponse.json({
-      message: "Role parameter is required",
-      status: 400,
-    });
-  }
 
   const supabase = await createClient();
 
@@ -52,14 +44,10 @@ export async function GET(req: NextRequest) {
     )
   `
     )
-    .eq("role", role) // Filter by role
     .eq("status", "AVAILABLE") // Filter by status
     .not("staff_shifts.shift_id", "is", null) // Filter out staffs without shifts
 
-
   const { data: staffs, error: staffsError } = await query;
-  
-  
 
   if (staffsError) {
     logger.error(`Staffs Error: ${staffsError.message}`);

@@ -34,7 +34,10 @@ export default function VacantStaffList({
               height={32}
               />
             </Avatar>
-            <span>{staff.name}</span>
+            <div>
+              <p className="text-sm">{staff.name}</p>
+              <p className="text-xs text-gray-500">{staff.role}</p>
+            </div>
           </li>
         ))}
       </ul>
