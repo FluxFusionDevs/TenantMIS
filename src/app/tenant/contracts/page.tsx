@@ -33,7 +33,7 @@ export default function ContractsPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-3xl font-bold opacity-80">My Contracts</h1>
+      <h1 className="text-3xl font-bold opacity-80 text-customIndigoTextColor">My Contracts</h1>
       <div className="flex flex-col gap-4">
         <div className="flex flex-row overflow-x-auto gap-4">
           {pdfFiles.map((file) => (

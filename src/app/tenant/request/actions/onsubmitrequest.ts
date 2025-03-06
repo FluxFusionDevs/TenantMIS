@@ -4,13 +4,7 @@ import { createClient } from "@/lib/supabaseServer";
 import { uploadFilesToBucket } from "@/lib/supabaseUploader";
 import logger from "@/logger/logger";
 import {
-  Category,
   Complaint,
-  getValidCategory,
-  getValidPriority,
-  getValidStatus,
-  Priority,
-  Status,
   validateCategory,
   validatePriority,
   validateStatus,
@@ -22,13 +16,6 @@ import { z } from "zod";
 const requestSchema = z.object({
   complaint_id: z.string().optional(),
   description: z.string().min(10, { message: "Description is too short" }),
-  status: z.string().refine(validateStatus, { message: "Invalid status" }),
-  priority: z
-    .string()
-    .refine(validatePriority, { message: "Invalid priority" }),
-  category: z
-    .string()
-    .refine(validateCategory, { message: "Invalid category" }),
   tenant_id: z.string().min(1, { message: "Tenant ID is required" }),
   subject: z.string().min(1, { message: "Subject is required" }),
 });
@@ -46,10 +33,7 @@ export async function onSubmitRequest(
   
   const data: Complaint = {
     subject: formData.get("subject") as string,
-    category: getValidCategory(formData.get("category") as string), // Use getValidCategory, not validateCategory
     description: formData.get("description") as string,
-    priority: getValidPriority(formData.get("priority") as string), // Use getValidPriority
-    status: getValidStatus(formData.get("status") as string), // Use getValidStatus
     tenant_id: formData.get("tenant_id") as string,
   };
 

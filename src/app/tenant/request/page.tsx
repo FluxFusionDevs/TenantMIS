@@ -20,6 +20,8 @@ import { PaginationControls } from "@/components/pagination";
 import { formatDateTime, isImageFile } from "@/app/utils";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/status-badge";
+import { PriorityBadge } from "@/components/priority-badge";
 
 export default async function Page({ searchParams }: { searchParams: any }) {
   const client = await createClient();
@@ -82,23 +84,14 @@ export default async function Page({ searchParams }: { searchParams: any }) {
         <div className="flex items-start justify-start">
           {renderAttachment()}
           <div className="mx-8">
-            <p className="font-bold text-2xl opacity-80">{complaint.subject}</p>
+            <p className="font-bold text-2xl opacity-80 text-customGreenTextColor">{complaint.subject}</p>
+            <p className="text-sm opacity-75">
+             #ID {complaint.complaint_id}
+            </p>
+            <p className="text-md opacity-75 mb-2">{complaint.description}</p>
             <p className="text-sm opacity-75 mb-2">
               {formatDateTime(complaint.created_at!)}
             </p>
-            <div className="flex flex-wrap gap-2 mb-2">
-              <Badge
-                variant={"secondary"}
-                className={`text-${getStatusColor(
-                  complaint.status
-                )} bg-${getStatusColor(complaint.status)}-100`}
-              >
-                {complaint.status}
-              </Badge>
-              <Badge variant={"secondary"} className={`text-${getPriorityColor(complaint.priority)} bg-${getPriorityColor(complaint.priority)}-100`}>
-                {complaint.priority}
-              </Badge>
-            </div>
             <Link href={`/tenant/request/details/${complaint.complaint_id}`}>
               <Button
                 className="bg-[#00000080] hover:bg-[#00000095] text-white"
@@ -115,7 +108,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-3xl font-bold opacity-80">Request Page</h1>
+      <h1 className="text-3xl font-bold opacity-80 text-customIndigoTextColor">Request Page</h1>
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4 flex-grow mr-2">
           <Search

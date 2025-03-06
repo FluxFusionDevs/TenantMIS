@@ -106,65 +106,9 @@ export function RequestForm({ tenantId }: { tenantId: string }) {
             className="col-span-3"
           />
         </div>
+      
+        <MultipleFileUploads allowedTypes={["image/jpeg", "image/png", "application/pdf"]} />
         <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="status" className="text-right">
-            Status
-          </Label>
-          <Select name="status">
-            <SelectTrigger className="col-span-3">
-              <SelectValue placeholder="Select a status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Status</SelectLabel>
-                {Object.values(Status).map((status) => (
-                  <SelectItem key={status} value={status}>
-                    {status}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="priority" className="text-right">
-            Priority
-          </Label>
-          <Select name="priority">
-            <SelectTrigger className="col-span-3">
-              <SelectValue placeholder="Select a priority" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Priority</SelectLabel>
-                {Object.values(Priority).map((priority) => (
-                  <SelectItem key={priority} value={priority}>
-                    {priority}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="category" className="text-right">
-            Category
-          </Label>
-          <Select name="category">
-            <SelectTrigger className="col-span-3">
-              <SelectValue placeholder="Select a category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Category</SelectLabel>
-                {Object.values(Category).map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
           {state.messages && (
             <div className="col-span-4">
               <ul
@@ -179,7 +123,6 @@ export function RequestForm({ tenantId }: { tenantId: string }) {
             </div>
           )}
         </div>
-        <MultipleFileUploads />
         <DialogFooter>
           <Button type="submit" disabled={pending}>
             {pending && <Loader2 className="h-4 w-4 animate-spin" />}

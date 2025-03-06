@@ -6,9 +6,6 @@ export interface Complaint {
   subject: string;
   description: string;
   created_at?: string;
-  status: Status;
-  priority: Priority;
-  category: Category;
   files?: string[] | File[];
   complaints_attachments?: ComplaintAttachment[];
 }

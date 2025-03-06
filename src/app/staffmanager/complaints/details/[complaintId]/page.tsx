@@ -2,23 +2,14 @@
 
 import { formatDateTime, isImageFile } from "@/app/utils";
 import { BackButton } from "@/components/back-button";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Complaint,
-  getPriorityColor,
-  getStatusColor,
-  Priority,
-  Status,
 } from "@/models/complaint";
 import { StaffWithTasks, StaffWithShifts } from "@/models/staff";
 import { FileIcon } from "lucide-react";
 import Image from "next/image";
 import VacantStaffList from "../../ui/vacantstafflist";
-import { format, parseISO } from "date-fns";
-import { Button } from "@/components/ui/button";
-import { EditTaskForm } from "@/app/staffmanager/ui/editTaskForm";
-import { Dialog } from "@/components/ui/dialog";
 import { AssignedStaffList } from "../../ui/assignedstafflist";
 
 export default async function Page({ params }: { params: any }) {
@@ -45,9 +36,7 @@ export default async function Page({ params }: { params: any }) {
 
     // Fetch vacant staff based on complaint category
     const res2 = await fetch(
-      `${baseUrl}/staffmanager/api/getVacantStaffs?role=${
-        complaint!.category
-      }&complaintId=${complaintId}`,
+      `${baseUrl}/staffmanager/api/getVacantStaffs?complaintId=${complaintId}`,
       {
         cache: "no-store",
       }
@@ -150,24 +139,6 @@ export default async function Page({ params }: { params: any }) {
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4 p-4 md:p-6">
-            <div className="flex flex-wrap gap-2">
-              <Badge
-                variant={"secondary"}
-                className={`text-${getStatusColor(
-                  complaint!.status
-                )} bg-${getStatusColor(complaint!.status)}-100`}
-              >
-                {complaint?.status}
-              </Badge>
-              <Badge
-                variant={"secondary"}
-                className={`text-${getPriorityColor(
-                  complaint!.priority
-                )} bg-${getPriorityColor(complaint!.priority)}-100`}
-              >
-                {complaint?.priority}
-              </Badge>
-            </div>
             <p className="text-base md:text-lg break-words whitespace-pre-wrap">
               Description: {complaint?.description}
             </p>

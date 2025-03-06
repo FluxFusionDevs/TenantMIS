@@ -1,4 +1,5 @@
 import imageCompression from 'browser-image-compression';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 import { z } from 'zod';
 
 // Usage example:
@@ -137,4 +138,10 @@ export function debounce<T extends (...args: any[]) => any>(
       fn(...args);
     }, delay);
   };
+}
+
+
+export function formatDateToNow(dateString: string): string {
+  const date = parseISO(dateString);
+  return formatDistanceToNow(date, { addSuffix: true });
 }
