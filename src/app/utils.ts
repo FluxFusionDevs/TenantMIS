@@ -1,4 +1,5 @@
 import imageCompression from 'browser-image-compression';
+import { z } from 'zod';
 
 // Usage example:
 // formatDateTime('2025-01-23T02:32:29.521369') => "01/23/2025 02:32"
@@ -99,4 +100,41 @@ export async function compressBatchImages(
   );
   
   return processedFiles;
+}
+
+
+export const formatErrors = (error: any): string[] => {
+  if (error instanceof z.ZodError || (typeof error === "object")) {
+    const zodError = error as z.ZodError;
+    if (zodError.issues && Array.isArray(zodError.issues)) {
+      return zodError.issues.map((issue: any) => issue.message);
+    } else if (zodError.message) {
+      try {
+        const messageObj = JSON.parse(zodError.message);
+        return messageObj.map((message: any) => message.message);
+      } catch (e) {
+        return [zodError.message];
+      }
+    }
+  } else if (typeof error === "string") {
+    return [error]; // Wrap single string errors in an array
+  } else {
+    return ["An unexpected error occurred"]; // Fallback for unknown error types
+  }
+  return ["An unexpected error occurred"]; // Ensure a return statement at the end
+};
+
+
+export function debounce<T extends (...args: any[]) => any>(
+  fn: T,
+  delay = 300
+): (...args: Parameters<T>) => void {
+  let timerId: NodeJS.Timeout | undefined;
+  
+  return (...args: Parameters<T>) => {
+    if (timerId) clearTimeout(timerId);
+    timerId = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
 }

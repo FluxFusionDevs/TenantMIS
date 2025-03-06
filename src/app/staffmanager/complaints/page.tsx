@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabaseServer";
 import logger from "@/logger/logger";
 import {
-  Complaint,
+  ComplaintWithStaffAssigned,
   getPriorityColor,
   getStatusColor,
+  Status,
 } from "@/models/complaint";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
@@ -18,6 +19,10 @@ import { formatDateTime, isImageFile } from "@/app/utils";
 import Link from "next/link";
 import { Search } from "../ui/searchComplaint";
 import { Badge } from "@/components/ui/badge";
+import { StaffWithShifts } from "@/models/staff";
+import { RequestForm } from "@/app/tenant/request/ui/addRequestForm";
+import { StatusBadge } from "@/components/status-badge";
+import { PriorityBadge } from "@/components/priority-badge";
 
 export default async function Page({ searchParams }: { searchParams: any }) {
   const client = await createClient();
@@ -26,12 +31,14 @@ export default async function Page({ searchParams }: { searchParams: any }) {
   const params = await searchParams;
   const currentPage = Number(await params.page) || 1;
 
-  const res = await fetch(`${baseUrl}/staffmanager/api/getRequests`, {
+  const res = await fetch(`${baseUrl}/staffmanager/api/getRequests?page=${currentPage}`, {
     cache: "no-store",
   });
 
   const data = await res.json();
-  const complaints: Complaint[] = data.complaints;
+
+  const complaints: ComplaintWithStaffAssigned[] = data.complaints;
+  // console.log(complaints);
 
   if (!Array.isArray(complaints)) {
     logger.error(`Complaints is not an array`);
@@ -80,25 +87,19 @@ export default async function Page({ searchParams }: { searchParams: any }) {
         <div className="flex items-start justify-start">
           {renderAttachment()}
           <div className="mx-8">
-            <p className="font-bold text-2xl opacity-80 mb-3">{complaint.subject}</p>
+            <p className="font-bold text-2xl opacity-80 mb-3">
+              {complaint.subject}
+            </p>
             <div className="flex flex-wrap gap-2 mb-2">
-              <Badge
-                variant={"secondary"}
-                className={`text-${getStatusColor(
-                  complaint.status
-                )} bg-${getStatusColor(complaint.status)}-100`}
-              >
-                {complaint.status}
-              </Badge>
-              <Badge
-                variant={"secondary"}
-                className={`text-${getPriorityColor(
-                  complaint.priority
-                )} bg-${getPriorityColor(complaint.priority)}-100`}
-              >
-                {complaint.priority}
-              </Badge>
+              <StatusBadge status={complaint.status} />
+              <PriorityBadge priority={complaint.priority} />
             </div>
+            {complaint.staff_assigned && complaint.staff_assigned.length > 0 && (
+              <p className="text-sm opacity-75 mb-2">
+                Assigned to:
+                {complaint.staff_assigned.map((staff) => staff.name).join(", ")}
+              </p>
+            )}
             <p className="text-sm opacity-75 mb-2">
               {formatDateTime(complaint.created_at!)}
             </p>
@@ -127,6 +128,14 @@ export default async function Page({ searchParams }: { searchParams: any }) {
           <Button>
             <FilterIcon size={20} />
           </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus size={20} />
+              </Button>
+            </DialogTrigger>
+            <RequestForm tenantId={tenantId} />
+          </Dialog>
         </div>
       </div>
 

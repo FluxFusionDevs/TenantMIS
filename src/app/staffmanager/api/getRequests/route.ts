@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import logger from "@/logger/logger";
 import { createClient } from "@/lib/supabaseServer";
+import { Complaint, ComplaintWithStaffAssigned } from "@/models/complaint";
+import { Staff } from "@/models/staff";
 
 interface ComplaintsResponse {
   complaints: any;
@@ -19,10 +21,11 @@ export async function GET(req: NextRequest) {
   const end = start + pageSize - 1;
 
   const supabase = await createClient();
-  
+
   let query = supabase
-  .from("complaints")
-  .select(`
+    .from("complaints")
+    .select(
+      `
     *,
     complaints_attachments (
       attachment_id,
@@ -31,15 +34,33 @@ export async function GET(req: NextRequest) {
       file_size,
       file_url,
       uploaded_at
+    ),
+    staff_tasks (
+      staff_id,
+      task_id,
+      deadline,
+      status,
+        staff (
+          staff_id,
+          name,
+          email,
+          phone_number
+        )
     )
-  `, { count: "exact" })
-  .range(start, end);
+  `,
+      { count: "exact" }
+    )
+    .order("created_at", { ascending: false }) // Order by newest complaints
+    .range(start, end);
 
   if (searchQuery) {
-    query = query.or(`subject.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+    query = query.or(
+      `subject.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`
+    );
   }
 
   const { data: complaints, error: complaintsError, count } = await query;
+  // console.log(complaints);
 
   if (complaintsError) {
     logger.error(`Complaints Error: ${complaintsError.message}`);
@@ -49,9 +70,18 @@ export async function GET(req: NextRequest) {
     });
   }
 
+  const complaintsResult: ComplaintWithStaffAssigned[] = complaints.map((complaint: any) => {
+    return {
+      ...complaint,
+      staff_assigned:
+        complaint.staff_tasks.length > 0 ? complaint.staff_tasks.map((task: any) => task.staff) : [],
+    };
+  });
+
+
   logger.info(`Successfully fetched complaints`);
   return NextResponse.json<ComplaintsResponse>({
-    complaints,
+    complaints: complaintsResult,
     totalPages: Math.ceil((count || 0) / pageSize),
     currentPage: page,
     message: "Complaints fetched successfully",

@@ -1,3 +1,5 @@
+"use server";
+
 import { formatDateTime, isImageFile } from "@/app/utils";
 import { BackButton } from "@/components/back-button";
 import { MultiCard } from "@/components/multi-card";
@@ -15,12 +17,17 @@ import {
   ImageIcon,
   Mail,
   Phone,
+  Trash2Icon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { EditStaffForm } from "../../../ui/editStaffForm";
 import ProfilePic from "@/components/profile-pic";
 import { updateProfileImage } from "../../../actions/onupdatestaff";
+import { ConfirmDialog } from "@/components/confirm-dialog";
+import { onDeleteTask } from "@/app/staffmanager/actions/ondeletetask";
+import { onDeleteStaff } from "@/app/staffmanager/actions/ondeletestaff";
+import { redirect } from "next/navigation";
 
 export default async function Page({ params }: { params: any }) {
   const client = await createClient();
@@ -117,6 +124,31 @@ export default async function Page({ params }: { params: any }) {
               </DialogTrigger>
               <EditStaffForm staff={staff} />
             </Dialog>
+            <ConfirmDialog
+              title={staff.name}
+              serverAction={async function deleteStaff() {
+                "use server";
+                const data = await onDeleteStaff(staff.staff_id!);
+                if (data.success) {
+                  redirect(`/staffmanager/${staff.role.toLocaleLowerCase()}`);
+                }
+              }}              
+              description={`Are you sure you want to remove ${staff.name} permanently?. If yes type the staff name in the input field below.`}
+              actionButtons={[
+                {
+                  label: "Remove",
+                  variant: "destructive",
+                  showLoaderOnLoading: true,
+                },
+              ]}
+            >
+              <Button
+                variant={"destructive"}
+                title="Remove staff from assignment"
+              >
+                <Trash2Icon className="w-4 h-4" />
+              </Button>
+            </ConfirmDialog>
           </div>
         </div>
 

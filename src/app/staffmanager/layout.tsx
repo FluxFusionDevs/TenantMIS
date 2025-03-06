@@ -52,8 +52,8 @@ export default function HomeLayout({
       icon: Shield,
     },
     {
-      title: "Technician",
-      url: `/staffmanager/technician`,
+      title: "Maintenance",
+      url: `/staffmanager/maintenance`,
       icon: Wrench,
     },
     {

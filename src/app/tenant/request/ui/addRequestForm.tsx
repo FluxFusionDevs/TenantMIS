@@ -25,6 +25,7 @@ import { useActionState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { MultipleFileUploads } from "@/components/multi-fileuploads";
 import { Loader2 } from "lucide-react";
+import { formatErrors } from "@/app/utils";
 
 type FormState = {
   success: boolean;
@@ -36,21 +37,6 @@ const initialState: FormState = {
   messages: [],
 };
 
-function formatValidationErrors(errors: string): string[] {
-  try {
-    const parsedErrors = JSON.parse(errors);
-    if (Array.isArray(parsedErrors)) {
-      return parsedErrors.map((error: any) => `• ${error.message}`);
-    }
-    // If single error
-    const singleError =
-      typeof parsedErrors === "string" ? parsedErrors : parsedErrors.message;
-    return [`${singleError}`];
-  } catch (e) {
-    // If parsing fails, return original string with bullet
-    return [`${errors}`];
-  }
-}
 
 export function RequestForm({ tenantId }: { tenantId: string }) {
   const [state, formAction, pending] = useActionState(
@@ -72,7 +58,7 @@ export function RequestForm({ tenantId }: { tenantId: string }) {
           messages: ["Request added successfully"],
         };
       } else {
-        const formattedErrors = formatValidationErrors(response.error.message);
+        const formattedErrors = formatErrors(response.error);
         return {
           success: false,
           messages: formattedErrors,

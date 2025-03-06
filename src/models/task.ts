@@ -2,10 +2,12 @@ import { Complaint } from "./complaint";
 
 export interface Task {
     task_id: string;
-    shift_id: string;
     status: TaskStatus;
     complaints?: Complaint;  
     deadline: string;
+    title: string;
+    description: string;
+    priority: string;
 }
 
 export enum TaskStatus {

@@ -1,6 +1,6 @@
 "use server";
 
-import { CardData, MultiCard } from "@/components/multi-card";
+import { MultiCard } from "@/components/multi-card";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabaseServer";
 import logger from "@/logger/logger";
@@ -39,7 +39,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
     logger.error(`Complaints is not an array`);
     return null;
   }
-  const cardData: CardData[] = complaints.map((complaint) => {
+  const cardData = complaints.map((complaint) => {
     const renderAttachment = () => {
       // Early return if attachments is undefined
       if (!complaint.complaints_attachments) {

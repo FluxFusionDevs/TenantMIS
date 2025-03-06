@@ -25,7 +25,7 @@ export interface Staff {
   staff_id?: string;
   user_id?: string;
   name: string;
-  password: string;
+  password?: string;
   role: StaffCategory;
   phone_number: string;
   email: string;
@@ -42,15 +42,7 @@ export interface StaffShift {
 }
 
 export interface StaffWithTasks extends Staff {
-    staff_tasks?: {
-      task_id: string;
-      title: string;
-      priority: string;
-      staff_id: string;
-      status: string;
-      description: string;
-      deadline: string;
-    } | null;
+    staff_tasks?: Task;
   };
 
 export interface StaffWithShifts extends Staff {

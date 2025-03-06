@@ -19,7 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { Loader2, Minus } from "lucide-react";
 import { onSubmitStaff } from "../actions/onsubmitstaff";
 import {
@@ -29,6 +29,8 @@ import {
   StaffStatus,
 } from "@/models/staff";
 import { TimePicker } from "@/components/timePicker";
+import { z } from "zod";
+import { formatErrors } from "@/app/utils";
 
 type FormState = {
   success: boolean;
@@ -40,23 +42,13 @@ const initialState: FormState = {
   messages: [],
 };
 
-function formatValidationErrors(errors: string): string[] {
-  try {
-    const parsedErrors = JSON.parse(errors);
-    if (Array.isArray(parsedErrors)) {
-      return parsedErrors.map((error: any) => `• ${error.message}`);
-    }
-    // If single error
-    const singleError =
-      typeof parsedErrors === "string" ? parsedErrors : parsedErrors.message;
-    return [`${singleError}`];
-  } catch (e) {
-    // If parsing fails, return original string with bullet
-    return [`${errors}`];
-  }
-}
-
-export function StaffForm({ userId, role  }: { userId: string, role: StaffCategory }) {
+export function StaffForm({
+  userId,
+  role,
+}: {
+  userId: string;
+  role: StaffCategory;
+}) {
   const [state, formAction, pending] = useActionState(
     submitStaff,
     initialState
@@ -127,8 +119,8 @@ export function StaffForm({ userId, role  }: { userId: string, role: StaffCatego
           success: true,
           messages: ["Staff added successfully"],
         };
-      } else {
-        const formattedErrors = formatValidationErrors(response.error.message);
+      } else {      
+        const formattedErrors = formatErrors(response.error);
         return {
           success: false,
           messages: formattedErrors,
@@ -183,6 +175,19 @@ export function StaffForm({ userId, role  }: { userId: string, role: StaffCatego
           </Label>
           <div className="col-span-3">
             <Input id="email" name="email" className="col-span-3" />
+          </div>
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="password" className="text-right">
+            Password
+          </Label>
+          <div className="col-span-3">
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              className="col-span-3"
+            />
           </div>
         </div>
         <div className="grid grid-cols-4 items-center gap-4">

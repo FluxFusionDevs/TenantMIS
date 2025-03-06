@@ -61,6 +61,26 @@ export function validateStatus(status: string): boolean {
   return Object.values(Status).includes(status as Status);
 }
 
+export function getValidCategory(category: string): Category {
+  if (!validateCategory(category)) {
+    throw new Error(`Invalid category: ${category}`);
+  }
+  return category as Category;
+}
+
+export function getValidPriority(priority: string): Priority {
+  if (!validatePriority(priority)) {
+    throw new Error(`Invalid priority: ${priority}`);
+  }
+  return priority as Priority;
+}
+
+export function getValidStatus(status: string): Status {
+  if (!validateStatus(status)) {
+    throw new Error(`Invalid status: ${status}`);
+  }
+  return status as Status;
+}
 
 export function getPriorityColor(priority: Priority): string {
   switch (priority) {

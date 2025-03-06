@@ -4,11 +4,18 @@ import { createClient } from "@/lib/supabaseServer";
 import { uploadFilesToBucket } from "@/lib/supabaseUploader";
 import logger from "@/logger/logger";
 import {
+  Category,
   Complaint,
+  getValidCategory,
+  getValidPriority,
+  getValidStatus,
+  Priority,
+  Status,
   validateCategory,
   validatePriority,
   validateStatus,
 } from "@/models/complaint";
+import { get } from "http";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -36,12 +43,13 @@ export async function onSubmitRequest(
 > {
   const supabase = await createClient();
   const files = formData.getAll("attachments") as File[];
+  
   const data: Complaint = {
     subject: formData.get("subject") as string,
-    category: validateCategory(formData.get("category") as string),
+    category: getValidCategory(formData.get("category") as string), // Use getValidCategory, not validateCategory
     description: formData.get("description") as string,
-    priority: validatePriority(formData.get("priority") as string),
-    status: validateStatus(formData.get("status") as string),
+    priority: getValidPriority(formData.get("priority") as string), // Use getValidPriority
+    status: getValidStatus(formData.get("status") as string), // Use getValidStatus
     tenant_id: formData.get("tenant_id") as string,
   };
 
@@ -99,6 +107,7 @@ export async function onSubmitRequest(
   }
 
   revalidatePath("/tenant/request");
+  revalidatePath("/staffmanager/complaints");
 
   return result;
 }
