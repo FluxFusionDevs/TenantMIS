@@ -26,7 +26,7 @@ const Router: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         const role = token.user_role;
         if (role === "TENANT") {
           redirect(RoleRoutes.TENANT);
-        } else if (role === "PROCURMENTMANAGER") {
+        } else if (role === "PROCUREMENTMANAGER") {
           redirect(RoleRoutes.PROCUREMENTMANAGER);
         } else if (role === "FINANCEMANAGER") {
           redirect(RoleRoutes.FINANCEMANAGER);

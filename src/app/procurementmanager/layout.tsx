@@ -1,47 +1,64 @@
+"use client";
+
+import ChatBotComponent from "@/components/chatbotfaq";
 import { AppSidebar } from "@/components/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Home, Users, ClipboardList, Settings, FileText, ShoppingCart } from "lucide-react";
-import ChatBot from "react-chatbotify";
-import { procurementManagerFaqs } from "../constants/faqs";
-import ChatBotComponent from "@/components/chatbotfaq";
+import { createClient } from "@/lib/supabaseClient";
+import {
+  Home,
+  Users,
+  ClipboardList,
+  Settings,
+  FileText,
+  ShoppingCart,
+  LogOut,
+} from "lucide-react";
+import { procurementManagerFaqs } from "./constants/faqs";
 
 interface MenuItem {
   title: string;
-  url: string;
+  url?: string;
   icon: React.ComponentType;
+  action?: () => void;
 }
 
-export default async function ManagerLayout({
+export default function ManagerLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: { procurementmanagerId: string };
 }) {
-  const { procurementmanagerId } = await params; // Correctly destructure params without `await`
+  const supabase = createClient();
+  
+  const signOut = async () => {
+    await supabase.auth.signOut();
+  };
 
   const procurementManagerItems: MenuItem[] = [
     {
       title: "Home",
-      url: `/procurementmanager/${procurementmanagerId}/dashboard`,
+      url: `/procurementmanager/dashboard`,
       icon: Home,
     },
     {
       title: "Procurement Requests",
-      url: `/procurementmanager/${procurementmanagerId}/tenants`,
+      url: `/procurementmanager/procrequests`,
       icon: Users,
     },
     {
       title: "Workflow Status",
-      url: `/procurementmanager/${procurementmanagerId}/contracts`,
+      url: `/procurementmanager/workstatus`,
       icon: ClipboardList,
     },
     {
       title: "Approval",
-      url: `/procurementmanager/${procurementmanagerId}/complaints`,
+      url: `/procurementmanager/approval`,
       icon: FileText,
     },
-    
+    {
+      title: "Logout",
+      action: signOut,
+      icon: LogOut,
+    },
   ];
 
   return (
