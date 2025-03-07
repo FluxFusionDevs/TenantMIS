@@ -13,6 +13,7 @@ interface ComplaintsResponse {
 }
 
 export async function GET(req: NextRequest) {
+  
   const { searchParams } = new URL(req.url);
   const searchQuery = searchParams.get("search");
   const page = parseInt(searchParams.get("page") || "1");
@@ -22,6 +23,7 @@ export async function GET(req: NextRequest) {
 
   const supabase = await createClient();
 
+ 
   let query = supabase
     .from("complaints")
     .select(

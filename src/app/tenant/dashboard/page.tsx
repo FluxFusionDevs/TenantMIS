@@ -3,8 +3,11 @@
 import { formatDateToNow } from '@/app/utils';
 import { MultiCard } from '@/components/multi-card'
 import { Complaint } from '@/models/complaint';
+import { Contract } from '@/models/contract';
+import { headers } from 'next/headers';
 import Image from 'next/image'
 import React from 'react'
+
 const cardData = [
     {
       id: 1,
@@ -68,41 +71,57 @@ const cardData = [
     },
   ];
 
-  const accountCardData = [
-    {
-      id: 1,
-      title: 'Card 1',
-      description: "Description 1",
-   
-    },
-    {
-      id: 2,
-      title: 'Card 2',
-      description: "Description 2",
-   
-    },
-    {
-      id: 3,
-      title: 'Card 3',
-      description: "Description 3",
-    },
-  ];
 
   export default async function Dashboard() {
     let complaints: Complaint[] = [];
+    let contract = {} as Contract;
   
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     try {
       const res = await fetch(`${baseUrl}/staffmanager/api/getRequests?page=1`);
+
+      const res2 = await fetch(`${baseUrl}/tenant/contracts/api/getContracts`, {
+        method: "GET",
+        headers: await headers()
+      })
+
       if (!res.ok) {
         console.error("Failed to fetch data. Status:", res.status);
       }
+
+      if (!res2.ok) {
+        console.error("Failed to fetch data. Status:", res2.status);
+      }
+
+
       const data = await res.json();
+      const data2 = await res2.json();
       complaints = data.complaints;
+      contract = data2.contracts;
+      
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   
+    const accountCardData = [
+      {
+        id: 1,
+        title: 'My Contract',
+        description: `End Date: ${contract.contract_end}`,
+     
+      },
+      {
+        id: 2,
+        title: 'Billing Statements',
+        description: "Description 2",
+     
+      },
+      {
+        id: 3,
+        title: 'Requests',
+        description: `Total: ${complaints.length}`,
+      },
+    ];
     const complaintsCard = complaints.map((complaint) => {
       return {
         id: Number(complaint.complaint_id),
@@ -122,9 +141,9 @@ const cardData = [
     return (
       <div className="space-y-4">
         <h1 className="text-3xl font-bold opacity-80 text-customIndigoTextColor">Recent Request</h1>
-        <MultiCard data={complaintsCard} direction="row" />
+        <MultiCard size='md' data={complaintsCard} direction="row" />
         <h1 className="text-3xl font-bold opacity-80 text-customGreenTextColor">Account Management</h1>
-        <MultiCard data={accountCardData} direction="row" />
+        <MultiCard data={accountCardData} size='sm' direction="row" />
       </div>
     );
   }
