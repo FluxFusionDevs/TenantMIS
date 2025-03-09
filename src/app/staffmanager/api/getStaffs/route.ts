@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
   const start = (page - 1) * pageSize;
   const end = start + pageSize - 1;
   const supabase = await createClient();
+ 
   let query = supabase
     .from("staff")
     .select(

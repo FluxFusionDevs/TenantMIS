@@ -10,6 +10,9 @@ export default {
   theme: {
   	extend: {
   		colors: {
+			customBg: '#F7F4FF',
+			customIndigoTextColor: '#010076',
+			customGreenTextColor: '#027B08',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -59,7 +62,8 @@ export default {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
-  			}
+  			},
+			 
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import React from "react";
 import { SessionProvider } from "./context/SupabaseSessionContext";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,11 +36,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
- 
   return (
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          {children}
+          <Toaster />
+        </SessionProvider>
       </body>
     </html>
   );

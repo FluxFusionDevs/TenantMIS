@@ -9,19 +9,13 @@ import {
   validatePriority,
   validateStatus,
 } from "@/models/complaint";
+import { get } from "http";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 const requestSchema = z.object({
   complaint_id: z.string().optional(),
   description: z.string().min(10, { message: "Description is too short" }),
-  status: z.string().refine(validateStatus, { message: "Invalid status" }),
-  priority: z
-    .string()
-    .refine(validatePriority, { message: "Invalid priority" }),
-  category: z
-    .string()
-    .refine(validateCategory, { message: "Invalid category" }),
   tenant_id: z.string().min(1, { message: "Tenant ID is required" }),
   subject: z.string().min(1, { message: "Subject is required" }),
 });
@@ -36,12 +30,10 @@ export async function onSubmitRequest(
 > {
   const supabase = await createClient();
   const files = formData.getAll("attachments") as File[];
+  
   const data: Complaint = {
     subject: formData.get("subject") as string,
-    category: validateCategory(formData.get("category") as string),
     description: formData.get("description") as string,
-    priority: validatePriority(formData.get("priority") as string),
-    status: validateStatus(formData.get("status") as string),
     tenant_id: formData.get("tenant_id") as string,
   };
 
@@ -99,6 +91,7 @@ export async function onSubmitRequest(
   }
 
   revalidatePath("/tenant/request");
+  revalidatePath("/staffmanager/complaints");
 
   return result;
 }

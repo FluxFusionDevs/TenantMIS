@@ -3,5 +3,6 @@ export enum RoleRoutes {
     TENANTMANAGER = '/tenantmanager/dashboard',
     PROCUREMENTMANAGER = '/procurementmanager/dashboard',
     FINANCEMANAGER = '/financemanager/dashboard',
-    STAFFMANAGER = '/staffmanager/dashboard'
+    STAFFMANAGER = '/staffmanager/dashboard',
+    STAFF = '/staff/dashboard',
 }

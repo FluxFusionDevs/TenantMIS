@@ -1,8 +1,16 @@
 import { formatDateTime, isImageFile } from "@/app/utils";
 import { BackButton } from "@/components/back-button";
+import { PriorityBadge } from "@/components/priority-badge";
+import { StatusBadge } from "@/components/status-badge";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabaseServer";
-import { Complaint } from "@/models/complaint";
+import {
+  Complaint,
+  getPriorityColor,
+  getStatusColor,
+  Priority,
+} from "@/models/complaint";
 import { ArrowLeft, FileIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -82,14 +90,11 @@ export default async function Page({ params }: { params: any }) {
       </div>
       <Card className="w-full md:w-1/2">
         <CardHeader>
-          <CardTitle className="text-2xl md:text-3xl lg:text-4xl font-bold break-words">
+          <CardTitle className="text-2xl md:text-3xl lg:text-4xl font-bold break-words text-customIndigoTextColor">
             {complaint.subject}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 p-4 md:p-6">
-          <p className="text-lg md:text-xl font-semibold truncate">
-            Status: {complaint.status}
-          </p>
           <p className="text-base md:text-lg break-words whitespace-pre-wrap">
             Description: {complaint.description}
           </p>

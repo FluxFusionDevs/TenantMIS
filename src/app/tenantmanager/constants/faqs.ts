@@ -69,7 +69,6 @@ export const tenantManagerFaqs: Flow = {
     },
     end: {
       chatDisabled: true,
-      message: "Is there anything else I can assist you with?",
       options: ["Yes, I have another question.", "No, that's all for now."],
       path: (params: Params) => {
         if (params.userInput === "Yes, I have another question.") {

@@ -32,7 +32,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
       id: staff.staff_id,
       title: (
         <div className="flex justify-between">
-          <Link href={`/staffmanager/technician/details/${staff.staff_id}`}>
+          <Link href={`/staffmanager/maintenance/details/${staff.staff_id}`}>
             <h1 className="text-2xl font-bold underline">{staff.name}</h1>
           </Link>
           <div className="flex items-center space-x-4">
@@ -90,7 +90,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
       <PaginationControls
         currentPage={currentPage}
         totalPages={data.totalPages}
-        redirectPath="/staffmanager/technician"
+        redirectPath="/staffmanager/maintenance"
       />
     </div>
   );

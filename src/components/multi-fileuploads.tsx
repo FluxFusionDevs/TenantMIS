@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Upload, X } from "lucide-react";
 
 
-export function MultipleFileUploads() {
+export function MultipleFileUploads({allowedTypes }: { allowedTypes: string[] }) {
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -43,6 +43,7 @@ export function MultipleFileUploads() {
           multiple
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           name="attachments"
+          accept={allowedTypes.join(",")}
           onChange={(e) => {
             const selectedFiles = Array.from(e.target.files || []);
             setFiles((prev) => [...prev, ...selectedFiles]);

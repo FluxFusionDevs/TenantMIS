@@ -5,6 +5,9 @@ import { uploadFilesToBucket } from "@/lib/supabaseUploader";
 import logger from "@/logger/logger";
 import {
   Complaint,
+  getValidCategory,
+  getValidPriority,
+  getValidStatus,
   validateCategory,
   validatePriority,
   validateStatus,
@@ -38,10 +41,10 @@ export async function onSubmitRequest(
   const files = formData.getAll("attachments") as File[];
   const data: Complaint = {
     subject: formData.get("subject") as string,
-    category: validateCategory(formData.get("category") as string),
+    category: getValidCategory(formData.get("category") as string), // Use getValidCategory, not validateCategory
     description: formData.get("description") as string,
-    priority: validatePriority(formData.get("priority") as string),
-    status: validateStatus(formData.get("status") as string),
+    priority: getValidPriority(formData.get("priority") as string), // Use getValidPriority
+    status: getValidStatus(formData.get("status") as string), // Use getValidStatus
     tenant_id: formData.get("tenant_id") as string,
   };
 

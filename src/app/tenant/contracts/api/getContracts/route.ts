@@ -11,6 +11,7 @@ interface ContractResponse {
 export async function GET(req: NextRequest) {
   const supabase = await createClient();
   const  { data: userData }= await supabase.auth.getUser();
+
   const user = userData.user;
   if (!user) {
     return NextResponse.json({
