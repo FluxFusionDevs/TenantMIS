@@ -72,6 +72,11 @@ export function CreateTenantForm() {
           <Input id="contact_no" name="contact_no" required />
         </div>
 
+        <div className="grid gap-2">
+          <Label htmlFor="picture">Profile Picture (Optional)</Label>
+          <Input id="picture" name="picture" type="file" accept="image/*" />
+        </div>
+
         {state.messages && (
           <ul className={`${state.success ? "text-green-500" : "text-red-500"} text-sm`}>
             {state.messages.map((message, index) => (

@@ -5,6 +5,7 @@ export interface Tenant {
     last_name: string;
     email: string;
     contact_no: string;
+    picture?: string;
 }
 
 export interface Contract {
