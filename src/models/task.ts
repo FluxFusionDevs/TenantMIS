@@ -2,6 +2,7 @@ import { Complaint } from "./complaint";
 
 export interface Task {
     task_id: string;
+    staff_id: string;
     status: TaskStatus;
     complaints?: Complaint;  
     deadline: string;

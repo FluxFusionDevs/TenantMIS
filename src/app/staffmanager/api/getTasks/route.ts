@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   const supabase = await createClient();
   logger.info(`Fetching complaints for role ${role} ${staffId}`);
 
-  let query = await supabase
+  let query = supabase
     .from("staff_tasks")
     .select(
       `
@@ -38,14 +38,18 @@ export async function GET(req: NextRequest) {
         file_url,
         uploaded_at
       )
-    )
-  `,
+    )`,
       { count: "exact" }
     )
-    .eq("complaints.category", role)
     .order("task_id", { ascending: false });
 
-  const { data: complaintsData, error: complaintsError, count } = query;
+  if (staffId) {
+    query = query.eq("staff_id", staffId);
+  }
+
+
+  const { data: complaintsData, error: complaintsError, count } = await query;
+
 
   if (complaintsError) {
     logger.error(`Complaints Error: ${complaintsError.message}`);
@@ -95,8 +99,6 @@ export async function GET(req: NextRequest) {
       }
     });
   }
-
-
   logger.info(`Successfully fetched complaints for role ${role}`);
   return NextResponse.json<ComplaintsResponse>({
     complaints: groupedComplaints,

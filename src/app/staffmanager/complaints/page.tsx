@@ -44,6 +44,7 @@ export default async function Page({ searchParams }: { searchParams: any }) {
     logger.error(`Complaints is not an array`);
     return null;
   }
+  
   const cardData = complaints.map((complaint) => {
     const renderAttachment = () => {
       // Early return if attachments is undefined
@@ -90,10 +91,6 @@ export default async function Page({ searchParams }: { searchParams: any }) {
             <p className="font-bold text-2xl opacity-80 mb-3">
               {complaint.subject}
             </p>
-            <div className="flex flex-wrap gap-2 mb-2">
-              <StatusBadge status={complaint.status} />
-              <PriorityBadge priority={complaint.priority} />
-            </div>
             {complaint.staff_assigned && complaint.staff_assigned.length > 0 && (
               <p className="text-sm opacity-75 mb-2">
                 Assigned to:

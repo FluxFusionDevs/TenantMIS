@@ -64,11 +64,12 @@ export async function onSubmitStaff(
     const { data: accountData, error: accountError } = await supabase.auth.admin.createUser({
       email: data.email,
       password: data.password,
+      email_confirm: true,
     });
 
     if (accountError) {
-      logger.error("Error creating staff account");
-      return { success: false, error: "Error creating staff account" };
+      logger.error("Error creating staff account, ", accountError);
+      return { success: false, error: `Error creating staff account ${accountError }`};
     }
 
     const userId = accountData?.user.id;

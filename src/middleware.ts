@@ -22,7 +22,6 @@ export const config = {
      * - manifest.json (PWA manifest file)
      * Feel free to modify this pattern to include more paths.
      */
-    '/((?!.*api/|_next/static|_next/image|favicon.ico|manifest.webmanifest|icon.png|logo.jpg).*)',
-
+    '/((?!.*api/|_next/static|_next/image|favicon.ico|manifest.webmanifest|icon.png|logo.jpg|profile_placeholder.png).*)',
   ],
 };

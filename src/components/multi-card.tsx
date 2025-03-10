@@ -9,13 +9,14 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-type CardData = {
+export type CardData = {
   id?: string | number  
   title?: string | React.ReactNode
   description?: string | React.ReactNode
   content?: React.ReactNode
   footer?: React.ReactNode
 }
+
 const paddingSizes = {
   xs: "p-2",
   sm: "p-4",
@@ -39,8 +40,6 @@ type MultiCardProps = {
   className?: string,
   size?: keyof typeof sizes
 }
-
-
 
 export function MultiCard({ data, direction, padding = "md", className, size = "auto" }: MultiCardProps) {
   return (

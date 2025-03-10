@@ -80,7 +80,6 @@ export async function GET(req: NextRequest) {
     };
   });
 
-
   logger.info(`Successfully fetched complaints`);
   return NextResponse.json<ComplaintsResponse>({
     complaints: complaintsResult,
